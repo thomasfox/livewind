@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test</Title>
+<meta charset="UTF-8"> 
+<link rel="stylesheet" href="css/livewind.css" />
+</head>
+<body>
+<h1 id="headline">Livewind Data</h1>
+<div id="windGauges" class="lw_wind_gauges">
+  <div id="windDirection" class="lw_gauge_container">
+    <h3 id="windDirectionHeadline" class="lw_gauge_headline">Windrichtung</h3>
+    <div id="windDirectionGauge" class="lw_gauge">
+      <canvas id="windDirectionCanvas" class="lw_gauge"></canvas>
+      <div id="windDirectionNorth" class="lw_winddirection_gauge_label lw_winddirection_gauge_label_north">N</div>
+       <div id="windDirectionSouth" class="lw_winddirection_gauge_label lw_winddirection_gauge_label_south">S</div>
+      <div id="windDirectionEast" class="lw_winddirection_gauge_label lw_winddirection_gauge_label_east">O</div>
+      <div id="windDirectionWest" class="lw_winddirection_gauge_label lw_winddirection_gauge_label_west">W</div>
+    </div>
+    <div id="windDirectionValue" class="lw_gauge_value"></div>
+  </div>
+  <div id="windSpeed" class="lw_gauge_container">
+    <h3 id="windSpeedHeaDline" class="lw_gauge_headline">Windgeschwindigkeit</h3>
+    <div id="windSpeedGauge" class="lw_gauge">
+      <canvas id="windSpeedCanvas" class="lw_gauge"></canvas>
+    </div>
+    <div id="windSpeedValue" class="lw_gauge_value"></div>
+  </div>
+  <div id="windSpeedGusts" class="lw_gauge_container">
+    <h3 id="windSpeedGustsHeadline" class="lw_gauge_headline">Windböen</h3>
+    <div id="windSpeedGustsGauge" class="lw_gauge">
+      <canvas id="windSpeedGustsCanvas" class="lw_gauge"></canvas>
+    </div>
+    <div id="windSpeedGustsValue" class="lw_gauge_value"></div>
+  </div>
+  <div id="windSpeedHourlyGraphContainer" class="lw_wind_graph_container">
+    <h3 id="windSpeedHourlyGraphHeadline" class="lw_chart_headline">Wind letzte Stunde [kt]</h3>
+    <div id="windSpeedHourlyGraph" class="lw_chart">
+      <canvas id="windSpeedHourlyCanvas" class="lw_chart"></canvas>
+    </div>
+  </div>
+</div>
+<div id="temperatures" class="lw_temperatures">
+  <div id="airTemperature" class="lw_temperature_small">
+    <h3 id="airTemperatureHeadline" class="lw_temperature_headline">Lufttemperatur</h3>
+    <canvas id="airTemperatureCanvas" class="lw_temperature_gauge_small" data-type="linear-gauge"
+      data-width="450"
+      data-height="400"
+      data-min-value="-10"
+      data-max-value="40"
+      data-major-ticks="-10,0,10,20,30,40"
+      data-minor-ticks="10"
+      data-borders="false"
+      data-bar-begin-circle="20"
+      data-highlights="false"
+      data-border-shadow-width="0"
+      data-tick-side="left"
+      data-number-side="left"
+      data-needle-side="left"
+      data-needle-type="line"
+      data-needle-width="3"
+      data-color-needle="#222"
+      data-color-needle-end="#222"
+      data-color-plate="#E7F3FF"
+      data-animation-duration="1500"
+      data-bar-width="8"
+      data-ticks-width="30"
+      data-ticks-width-minor="10"
+      data-color-bar-progress="#6FADCF"
+      data-color-value-box-shadow="false"
+      data-value-box-stroke="0"
+      data-color-value-box-background="false"
+      data-value-int="1"
+      data-value-dec="1"
+      data-font-value-size="25"
+      data-font-numbers-size="30"
+    ></canvas>
+  </div>
+  <div id="windchillTemperature" class="lw_temperature">
+    <h3 id="windchillTemperatureHeadline" class="lw_temperature_headline">gefühlte Temperatur</h3>
+    <canvas id="windchillTemperatureCanvas" class="lw_temperature_gauge" data-type="linear-gauge"
+      data-height="400"
+      data-min-value="-10"
+      data-max-value="40"
+      data-major-ticks="-10,0,10,20,30,40"
+      data-minor-ticks="10"
+      data-borders="false"
+      data-bar-begin-circle="20"
+      data-highlights="false"
+      data-border-shadow-width="0"
+      data-tick-side="left"
+      data-number-side="left"
+      data-needle-side="left"
+      data-needle-type="line"
+      data-needle-width="3"
+      data-color-needle="#222"
+      data-color-needle-end="#222"
+      data-color-plate="#E7F3FF"
+      data-animation-duration="1500"
+      data-bar-width="8"
+      data-ticks-width="30"
+      data-ticks-width-minor="10"
+      data-color-bar-progress="#6FADCF"
+      data-color-value-box-shadow="false"
+      data-value-box-stroke="0"
+      data-color-value-box-background="false"
+      data-value-int="1"
+      data-value-dec="1"
+      data-font-value-size="25"
+      data-font-numbers-size="30"
+    ></canvas>
+  </div>
+  <div id="waterTemperature" class="lw_temperature_small">
+    <h3 id="waterTemperatureHeadline" class="lw_temperature_headline">Wassertemperatur</h3>
+    <canvas id="waterTemperatureCanvas" class="lw_temperature_gauge_small" data-type="linear-gauge"
+      data-height="400"
+      data-min-value="-10"
+      data-max-value="40"
+      data-major-ticks="-10,0,10,20,30,40"
+      data-minor-ticks="10"
+      data-borders="false"
+      data-bar-begin-circle="20"
+      data-highlights="false"
+      data-border-shadow-width="0"
+      data-tick-side="left"
+      data-number-side="left"
+      data-needle-side="left"
+      data-needle-type="line"
+      data-needle-width="3"
+      data-color-needle="#222"
+      data-color-needle-end="#222"
+      data-color-plate="#E7F3FF"
+      data-animation-duration="1500"
+      data-bar-width="8"
+      data-ticks-width="30"
+      data-ticks-width-minor="10"
+      data-color-bar-progress="#6FADCF"
+      data-color-value-box-shadow="false"
+      data-value-box-stroke="0"
+      data-color-value-box-background="false"
+      data-value-int="1"
+      data-value-dec="1"
+      data-font-value-size="25"
+      data-font-numbers-size="30"
+    ></canvas>
+  </div>
+  <div id="dailyRain" class="lw_rain_small">
+    <h3 id="dailyRainHeadline" class="lw_rain_headline">Regenmenge Tag</h3>
+    <canvas id="dailyRainCanvas" class="lw_rain_gauge_small" data-type="linear-gauge"
+      data-height="370"
+      data-min-value="0"
+      data-max-value="20"
+      data-major-ticks="0,5,10,15,20"
+      data-minor-ticks="10"
+      data-borders="false"
+      data-bar-begin-circle="0"
+      data-highlights="false"
+      data-border-shadow-width="0"
+      data-tick-side="left"
+      data-number-side="left"
+      data-needle-side="left"
+      data-needle-type="line"
+      data-needle-width="3"
+      data-color-needle="#222"
+      data-color-needle-end="#222"
+      data-color-plate="#E7F3FF"
+      data-animation-duration="1500"
+      data-bar-width="8"
+      data-ticks-width="30"
+      data-ticks-width-minor="10"
+      data-color-bar-progress="#6FADCF"
+      data-color-value-box-shadow="false"
+      data-value-box-stroke="0"
+      data-color-value-box-background="false"
+      data-value-int="1"
+      data-value-dec="1"
+      data-font-value-size="25"
+      data-font-numbers-size="30"
+    ></canvas>
+  </div>
+  <div id="windDirectionHourlyGraphContainer" class="lw_wind_graph_container">
+    <h3 id="windDirectionHourlyGraphHeadline" class="lw_chart_headline">Windrichtung letzte Stunde [°]</h3>
+    <div id="windDirectionHourlyGraph" class="lw_chart">
+      <canvas id="windDirectionHourlyCanvas" class="lw_chart"></canvas>
+    </div>
+  </div>
+  <div id="lastRead" class="lw_lastRead"><span id="readIndicator" class="lw_readIndicator">&#x25CF</span> <span>Daten vom: </span><span id="now"></span></div>
+</div>
+
+<div id="output"></div>
+<script src="js/polyfill.js"></script>
+<script src="js/gauge.min.js"></script>
+<script src="js/canvas-gauge-linear.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/moment.min.js"></script>
+<script src="js/Chart.min.js"></script>
+<script src="js/livewind.js"></script>
+<script>
+livewind_init();
+
+var windDirectionGauge;
+var windSpeedGauge;
+var windSpeedGustsGauge;
+
+function repaint() {
+  var windDirectionCanvas = document.getElementById('windDirectionCanvas');
+  windDirectionCanvas.height = windDirectionCanvas.width;
+  document.getElementById('windDirectionGauge').height = windDirectionCanvas.width;
+  windDirectionGauge = new Gauge(windDirectionCanvas).setOptions(getDirectionGaugeOpts()); 
+  windDirectionGauge.maxValue = 360;
+  windDirectionGauge.setMinValue(0); 
+  windDirectionGauge.animationSpeed = 16; 
+
+  var windSpeedCanvas = document.getElementById('windSpeedCanvas');
+  windSpeedCanvas.height = windSpeedCanvas.width;
+  windSpeedGauge = new Gauge(windSpeedCanvas).setOptions(getSpeedGaugeOpts()); 
+  windSpeedGauge.maxValue = 20;
+  windSpeedGauge.setMinValue(0); 
+  windSpeedGauge.animationSpeed = 16; 
+
+  var windSpeedGustsCanvas = document.getElementById('windSpeedGustsCanvas');
+  windSpeedGustsCanvas.height = windSpeedGustsCanvas.width;
+  windSpeedGustsGauge = new Gauge(windSpeedGustsCanvas).setOptions(getSpeedGaugeOpts()); 
+  windSpeedGustsGauge.maxValue = 20;
+  windSpeedGustsGauge.setMinValue(0); 
+  windSpeedGustsGauge.animationSpeed = 16; 
+  
+  var temperaturesDiv = document.getElementById('temperatures');
+  var temperaturesDivWidth=temperaturesDiv.getBoundingClientRect().width;
+  var temperatureCanvasWidth = temperaturesDivWidth*0.12;
+  var temperatureCanvasHeight = temperaturesDivWidth*0.25;
+
+  var airTemperatureCanvas = document.getElementById('airTemperatureCanvas');
+  airTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)
+  airTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight)
+  
+  var windchillTemperatureCanvas = document.getElementById('windchillTemperatureCanvas');
+  windchillTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)
+  windchillTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight)
+  
+  var waterTemperatureCanvas = document.getElementById('waterTemperatureCanvas');
+  waterTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)
+  waterTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight)
+  
+  var dailyRainCanvas = document.getElementById('dailyRainCanvas');
+  dailyRainCanvas.setAttribute('data-width', temperatureCanvasWidth)
+  dailyRainCanvas.setAttribute('data-height', temperatureCanvasHeight)
+
+  updateData();
+  var interval = setInterval(function(){ updateData(); }, 5000);
+}
+
+function createChart(table, column, label, canvasId) {
+    var color = Chart.helpers.color;
+    var config = {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: label,
+                borderColor: 'rgba(111, 173, 207)',
+                backgroundColor: 'rgba(111, 173, 207)',
+                borderWidth: 2,
+                pointRadius : 3,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: false,
+            },
+            legend: {
+                display: false,
+            },
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    display: true,
+                    scaleLabel: {
+                        display: false
+                    },
+                    ticks: {
+                        fontSize: 12,
+                        autoSkip: false
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: false
+                    },
+                    ticks: {
+                        fontSize: 12
+                    }
+                }]
+            }
+        }
+    };
+
+    var ctx = document.getElementById(canvasId).getContext('2d'); 
+    window[table + "_" + column] = new Chart(ctx, config);
+}
+
+createChart("wind", "speedHourly", 'Windgeschwindigkeit [kt]', 'windSpeedHourlyCanvas');
+createChart("wind", "directionHourly", 'Windrichtung [°]', 'windDirectionHourlyCanvas');
+repaint();
+
+
+</script>
+</body>
