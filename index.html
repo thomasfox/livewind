@@ -33,10 +33,10 @@
     </div>
     <div id="windSpeedGustsValue" class="lw_gauge_value"></div>
   </div>
-  <div id="windSpeedHourlyGraphContainer" class="lw_wind_graph_container">
-    <h3 id="windSpeedHourlyGraphHeadline" class="lw_chart_headline">Wind letzte Stunde [kt]</h3>
-    <div id="windSpeedHourlyGraph" class="lw_chart">
-      <canvas id="windSpeedHourlyCanvas" class="lw_chart"></canvas>
+  <div id="windSpeedMinutelyGraphContainer" class="lw_wind_graph_container">
+    <h3 id="windSpeedMinutelyGraphHeadline" class="lw_chart_headline">Wind letzte Stunde [kt]</h3>
+    <div id="windSpeedMinutelyGraph" class="lw_chart">
+      <canvas id="windSpeedMinutelyCanvas" class="lw_chart"></canvas>
     </div>
   </div>
 </div>
@@ -178,10 +178,10 @@
       data-font-numbers-size="30"
     ></canvas>
   </div>
-  <div id="windDirectionHourlyGraphContainer" class="lw_wind_graph_container">
-    <h3 id="windDirectionHourlyGraphHeadline" class="lw_chart_headline">Windrichtung letzte Stunde [°]</h3>
-    <div id="windDirectionHourlyGraph" class="lw_chart">
-      <canvas id="windDirectionHourlyCanvas" class="lw_chart"></canvas>
+  <div id="windDirectionMinutelyGraphContainer" class="lw_wind_graph_container">
+    <h3 id="windDirectionMinutelyGraphHeadline" class="lw_chart_headline">Windrichtung letzte Stunde [°]</h3>
+    <div id="windDirectionMinutelyGraph" class="lw_chart">
+      <canvas id="windDirectionMinutelyCanvas" class="lw_chart"></canvas>
     </div>
   </div>
   <div id="lastRead" class="lw_lastRead"><span id="readIndicator" class="lw_readIndicator">&#x25CF</span> <span>Daten vom: </span><span id="now"></span></div>
@@ -250,7 +250,7 @@ function repaint() {
   var interval = setInterval(function(){ updateData(); }, 5000);
 }
 
-function createChart(table, column, label, canvasId) {
+function createChart(groupId, chartId, label, canvasId) {
     var color = Chart.helpers.color;
     var config = {
         type: 'line',
@@ -298,11 +298,15 @@ function createChart(table, column, label, canvasId) {
     };
 
     var ctx = document.getElementById(canvasId).getContext('2d'); 
-    window[table + "_" + column] = new Chart(ctx, config);
+    window[groupId + "_" + chartId] = new Chart(ctx, config);
+    if (debug)
+    {
+      console.debug("created chart " + groupId + "_" + chartId);
+    }
 }
 
-createChart("wind", "speedHourly", 'Windgeschwindigkeit [kt]', 'windSpeedHourlyCanvas');
-createChart("wind", "directionHourly", 'Windrichtung [°]', 'windDirectionHourlyCanvas');
+createChart("wind", "speedMinutely", 'Windgeschwindigkeit [kt]', 'windSpeedMinutelyCanvas');
+createChart("wind", "directionMinutely", 'Windrichtung [°]', 'windDirectionMinutelyCanvas');
 repaint();
 
 

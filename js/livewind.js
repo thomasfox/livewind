@@ -11,86 +11,146 @@ function livewind_init()
   windGauges.style.height = (windGauges.clientWidth * 0.22) + "px";
 }
 
+// TODO remove global now variable
+var now = new Date();
+
 function updateData()
 {
-  var now;
-  var xmlHttpClientraw = new XMLHttpRequest();
-  xmlHttpClientraw.open("GET", clientrawUrl, true); 
-  xmlHttpClientraw.send();
-  xmlHttpClientraw.onreadystatechange = function() {
-    if (this.readyState == this.DONE) 
-    {
-      var values = xmlHttpClientraw.responseText.split(" ");
-        
-      var id = values[0];
-      if (id != clientrawId) 
-      {
-        return;
-      }
-        
-      var windSpeed = values[1];
-      windSpeedGauge.set(windSpeed);
-      var windSpeedBeaufort = getBeaufort(windSpeed);
-      document.getElementById("windSpeedValue").innerHTML = windSpeed + ' kt (' + windSpeedBeaufort + ' Bft)';
-        
-      var windSpeedGusts = values[2];
-      windSpeedGustsGauge.set(windSpeedGusts);
-      var windSpeedGustsBeaufort = getBeaufort(windSpeedGusts);
-      document.getElementById("windSpeedGustsValue").innerHTML = windSpeedGusts + ' kt (' + windSpeedGustsBeaufort + ' Bft)';
-        
-      var windDirection = values[3];
-      var windDirectionGaugeValue = (parseInt(windDirection) + 180) % 360;
-      windDirectionGauge.set(windDirectionGaugeValue);
-      document.getElementById("windDirectionValue").innerHTML = windDirection + ' °';
-        
-      var airTemperature = values[4]
-      document.getElementById("airTemperatureCanvas").setAttribute('data-value', airTemperature);
-      document.getElementById("airTemperatureCanvas").setAttribute('data-value-text', airTemperature + " °C");
-        
-      var windchillTemperature = values[44]
-      document.getElementById("windchillTemperatureCanvas").setAttribute('data-value', windchillTemperature);
-      document.getElementById("windchillTemperatureCanvas").setAttribute('data-value-text', windchillTemperature + " °C");
-
-      var waterTemperature = values[20]
-      document.getElementById("waterTemperatureCanvas").setAttribute('data-value', waterTemperature);
-      document.getElementById("waterTemperatureCanvas").setAttribute('data-value-text', waterTemperature + " °C");
-
-      var dailyRain = values[7]
-      document.getElementById("dailyRainCanvas").setAttribute('data-value', dailyRain);
-      document.getElementById("dailyRainCanvas").setAttribute('data-value-text', dailyRain + " mm");
-
-      var hour = values[29];
-      var minute = values[30];
-      var seconds = values[31];
-      var day = values[35];
-      var month = values[36];
-      var year = values[141];
-      now = new Date (year, month, day, hour, minute, seconds);
-      document.getElementById("now").innerHTML = now.toLocaleString("de-DE");
-      document.getElementById("readIndicator").classList.toggle("lw_readIndicator_fade");
-    }
+  if (debug)
+  {
+    console.debug("updating data...");
   }
-  var xmlHttpClientrawhour = new XMLHttpRequest();
-  xmlHttpClientrawhour.open("GET", clientrawhourUrl, true); 
-  xmlHttpClientrawhour.send();
-  xmlHttpClientrawhour.onreadystatechange = function() {
+  retrieveAndParse(clientrawUrl, parseClientraw);
+  retrieveAndParse(clientrawhourUrl, parseClientrawhour);
+  retrieveAndParse(clientrawextraUrl, parseClientrawextra);
+}
+
+function retrieveAndParse(url, parseFunction)
+{
+  var request = new XMLHttpRequest();
+  request.open("GET", url, true); 
+  request.send();
+  request.onreadystatechange = function() {
     if (this.readyState == this.DONE) 
     {
-      var values = xmlHttpClientrawhour.responseText.split(" ");
-      
-      var id = values[0];
-      if (id != clientrawId) 
-      {
-        return;
-      }
-      updateChart("wind","speedHourly", values, 1, now);
-      updateChart("wind","directionHourly", values, 121, now);
+      parseFunction(url, request);
     }
   }
 }
 
-function updateChart(groupId, chartId, values, startIndex, now)
+function parseClientraw(url, request)
 {
+  var values = parseValues(url, request);
+
+  var windSpeed = values[1];
+  windSpeedGauge.set(windSpeed);
+  var windSpeedBeaufort = getBeaufort(windSpeed);
+  document.getElementById("windSpeedValue").innerHTML = windSpeed + ' kt (' + windSpeedBeaufort + ' Bft)';
+
+  var windSpeedGusts = values[2];
+  windSpeedGustsGauge.set(windSpeedGusts);
+  var windSpeedGustsBeaufort = getBeaufort(windSpeedGusts);
+  document.getElementById("windSpeedGustsValue").innerHTML = windSpeedGusts + ' kt (' + windSpeedGustsBeaufort + ' Bft)';
+
+  var windDirection = values[3];
+  var windDirectionGaugeValue = (parseInt(windDirection) + 180) % 360;
+  windDirectionGauge.set(windDirectionGaugeValue);
+  document.getElementById("windDirectionValue").innerHTML = windDirection + ' °';
+
+  var airTemperature = values[4]
+  document.getElementById("airTemperatureCanvas").setAttribute('data-value', airTemperature);
+  document.getElementById("airTemperatureCanvas").setAttribute('data-value-text', airTemperature + " °C");
+
+  var windchillTemperature = values[44]
+  document.getElementById("windchillTemperatureCanvas").setAttribute('data-value', windchillTemperature);
+  document.getElementById("windchillTemperatureCanvas").setAttribute('data-value-text', windchillTemperature + " °C");
+
+  var waterTemperature = values[20]
+  document.getElementById("waterTemperatureCanvas").setAttribute('data-value', waterTemperature);
+  document.getElementById("waterTemperatureCanvas").setAttribute('data-value-text', waterTemperature + " °C");
+
+  var dailyRain = values[7]
+  document.getElementById("dailyRainCanvas").setAttribute('data-value', dailyRain);
+  document.getElementById("dailyRainCanvas").setAttribute('data-value-text', dailyRain + " mm");
+
+  var hour = values[29];
+  var minute = values[30];
+  var seconds = values[31];
+  var day = values[35];
+  var month = values[36];
+  var year = values[141];
+  now = new Date(year, month, day, hour, minute, seconds);
+  if (debug)
+  {
+    console.debug("set now to " + now);
+  }
+
+  document.getElementById("now").innerHTML = now.toLocaleString("de-DE");
+  document.getElementById("readIndicator").classList.toggle("lw_readIndicator_fade");
+  if (debug)
+  {
+    console.debug("finished parsing " + url);
+  }
+}
+
+function parseClientrawhour(url, request)
+{
+  var values = parseValues(url, request);
+  if (values == null)
+  {
+    return;
+  }
+  updateMinutelyChart("wind","speedMinutely", values, 1);
+  updateMinutelyChart("wind","directionMinutely", values, 121);
+
+  if (debug)
+  {
+    console.debug("finished parsing " + url);
+  }
+}
+
+function parseClientrawextra(url, request)
+{
+  var values = parseValues(url, request);
+  if (values == null)
+  {
+    return;
+  }
+
+  if (debug)
+  {
+    console.debug("finished parsing " + url);
+  }
+}
+
+function parseValues(url, request)
+{
+  if (debug)
+  {
+    console.debug("read " + url);
+  }
+  var values = request.responseText.split(" ");
+    
+  var id = values[0];
+  if (id != clientrawId) 
+  {
+    console.warn("could not read " + clientrawUrl + ", wrong id. Found: " + id + " expected: " + clientrawId);
+    return null;
+  }
+  return values;
+}
+
+function updateMinutelyChart(groupId, chartId, values, startIndex)
+{
+  if (now == null)
+  {
+    console.warn("not updating chart " + groupId + "_" + chartId + " because now is not set");
+    return;
+  }
+  if (debug)
+  {
+    console.debug("updating chart " + groupId + "_" + chartId);
+  }
   var chartConfig = window[groupId + "_" + chartId].config;
   chartConfig.data.datasets[0].data = [];
   for (var i = startIndex; i < 60 + startIndex; i++) 
