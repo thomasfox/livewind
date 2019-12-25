@@ -5,21 +5,21 @@ body {
 
 .lw_wind_gauges, .lw_temperatures {
     width:100%;
-    max-width: 1200px;
+    max-width: 1600px;
     margin-top: 2%;
 }
 
 h1 {
     text-align: center;
-    max-width: 1200px;
+    max-width: 1600px;
     font-size:150%;
     margin: 0.5%;
 }
 
 .lw_gauge_container {
-    width:15%;
+    width:12%;
     height:96%;
-    margin:0 2% 0 2%;
+    margin:0 1% 0 1%;
     display: inline-block; 
     vertical-align: top;
 }
@@ -99,15 +99,15 @@ canvas.lw_chart {
 }
 
 .lw_temperature,.lw_rain {
-    width: 15%;
+    width: 9%;
     margin: 0 0.5% 0 0.5%;
     display: inline-block; 
     vertical-align: top;
 }
 
 .lw_temperature_small,.lw_rain_small {
-    width: 12%;
-    margin: 0 0.5% 0 0.5%;
+    width: 7%;
+    margin: 0 2% 0 1.5%;
     display: inline-block; 
     vertical-align: top;
 }
@@ -115,6 +115,8 @@ canvas.lw_chart {
 .lw_temperature_headline, .lw_rain_headline {
     font-size: 100%;
     width: 100%;
+    margin-left: 5%;
+    margin-right: 5%;
     margin-top: 0;
     margin-bottom: 2%;
     text-align: center;
@@ -131,8 +133,12 @@ canvas.lw_chart {
     height: 30%;
 }
 
+.lw_chart_container {
+    position: relative; 
+}
+
 .lw_wind_graph_container {
-    width: 36%;
+    width: 22%;
     height: 96%;
     margin: 0 2% 0 2%;
     display: inline-block; 

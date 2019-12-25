@@ -2,13 +2,13 @@ function livewind_init()
 {
   document.getElementById('headline').innerHTML = headline;
   var bodyWidth = document.body.clientWidth;
-  if (bodyWidth > 1200) {
-    bodyWidth = 1200;
+  if (bodyWidth > 1600) {
+    bodyWidth = 1600;
   }
-  var bodyFontSize = bodyWidth / 70;
+  var bodyFontSize = bodyWidth / 100;
   document.body.style.fontSize = bodyFontSize + "px";
   var windGauges = document.getElementById('windGauges');
-  windGauges.style.height = (windGauges.clientWidth * 0.22) + "px";
+  windGauges.style.height = (windGauges.clientWidth * 0.17) + "px";
 }
 
 // TODO remove global now variable
@@ -116,6 +116,8 @@ function parseClientrawextra(url, request)
   {
     return;
   }
+  updateHourlyChart("wind","speedHourly", values, 1, 562);
+  updateHourlyChart("wind","directionHourly", values, 536, 590);
 
   if (debug)
   {
@@ -156,7 +158,7 @@ function updateMinutelyChart(groupId, chartId, values, startIndex)
   for (var i = startIndex; i < 60 + startIndex; i++) 
   {
     var time = new Date(now);
-    time.setMinutes(now.getMinutes() - 60 - startIndex + i);
+    time.setMinutes(now.getMinutes() - 59 - startIndex + i);
     var datapoint = new Object();
     datapoint.x = time;
     datapoint.y = parseFloat(values[i]);
@@ -164,6 +166,41 @@ function updateMinutelyChart(groupId, chartId, values, startIndex)
   }
   window[groupId + "_" + chartId].update();
 }
+
+function updateHourlyChart(groupId, chartId, values, startIndex1, startIndex21)
+{
+  if (now == null)
+  {
+    console.warn("not updating chart " + groupId + "_" + chartId + " because now is not set");
+    return;
+  }
+  if (debug)
+  {
+    console.debug("updating chart " + groupId + "_" + chartId);
+  }
+  var chartConfig = window[groupId + "_" + chartId].config;
+  chartConfig.data.datasets[0].data = [];
+  for (var i = startIndex1; i < 20 + startIndex1; i++) 
+  {
+    var time = new Date(now);
+    time.setHours(now.getHours() - 23 - startIndex1 + i);
+    var datapoint = new Object();
+    datapoint.x = time;
+    datapoint.y = parseFloat(values[i]);
+    chartConfig.data.datasets[0].data.push(datapoint);
+  }
+  for (var i = startIndex21; i < 4 + startIndex21; i++) 
+  {
+    var time = new Date(now);
+    time.setHours(now.getHours() - 3 - startIndex21 + i);
+    var datapoint = new Object();
+    datapoint.x = time;
+    datapoint.y = parseFloat(values[i]);
+    chartConfig.data.datasets[0].data.push(datapoint);
+  }
+  window[groupId + "_" + chartId].update();
+}
+
 
 function getGaugeOpts()
 {
@@ -269,4 +306,67 @@ function getBeaufort(windSpeedInKnots) {
     return 11;
   }
   return 12;
+}
+
+function createChart(groupId, chartId, label, canvasId, timeUnit, timeStepSize) {
+  var color = Chart.helpers.color;
+  var config = {
+    type: 'line',
+    data: {
+      datasets: [{
+        label: label,
+        borderColor: 'rgba(111, 173, 207)',
+        backgroundColor: 'rgba(111, 173, 207)',
+        borderWidth: 2,
+        pointRadius: 3,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      aspectRatio: 1.3,
+      title: {
+        display: false,
+      },
+      legend: {
+        display: false,
+      },
+      scales: {
+        xAxes: [{
+          type: 'time',
+          display: true,
+          scaleLabel: {
+            display: false
+          },
+          ticks: {
+            fontSize: 12
+          },
+          time: {
+            unit: timeUnit,
+            stepSize: timeStepSize,
+            displayFormats: {
+              minute: 'hh:mm',
+              hour: 'hh:mm'
+            }
+          }
+        }],
+        yAxes: [{
+          display: true,
+          scaleLabel: {
+            display: false
+          },
+          ticks: {
+            fontSize: 12
+          }
+        }]
+      }
+    }
+  };
+
+  var ctx = document.getElementById(canvasId).getContext('2d'); 
+  window[groupId + "_" + chartId] = new Chart(ctx, config);
+  if (debug)
+  {
+    console.debug("created chart " + groupId + "_" + chartId);
+  }
 }

@@ -35,16 +35,21 @@
   </div>
   <div id="windSpeedMinutelyGraphContainer" class="lw_wind_graph_container">
     <h3 id="windSpeedMinutelyGraphHeadline" class="lw_chart_headline">Wind letzte Stunde [kt]</h3>
-    <div id="windSpeedMinutelyGraph" class="lw_chart">
+    <div id="windSpeedMinutelyGraph" class="lw_chart_container">
       <canvas id="windSpeedMinutelyCanvas" class="lw_chart"></canvas>
+    </div>
+  </div>
+  <div id="windSpeedHourlyGraphContainer" class="lw_wind_graph_container">
+    <h3 id="windSpeedHourlyGraphHeadline" class="lw_chart_headline">Wind letzten Tag [kt]</h3>
+    <div id="windSpeedHourlyGraph" class="lw_chart_container">
+      <canvas id="windSpeedHourlyCanvas" class="lw_chart"></canvas>
     </div>
   </div>
 </div>
 <div id="temperatures" class="lw_temperatures">
   <div id="airTemperature" class="lw_temperature_small">
-    <h3 id="airTemperatureHeadline" class="lw_temperature_headline">Lufttemperatur</h3>
+    <h3 id="airTemperatureHeadline" class="lw_temperature_headline">Temperatur Luft</h3>
     <canvas id="airTemperatureCanvas" class="lw_temperature_gauge_small" data-type="linear-gauge"
-      data-width="450"
       data-height="400"
       data-min-value="-10"
       data-max-value="40"
@@ -77,7 +82,7 @@
     ></canvas>
   </div>
   <div id="windchillTemperature" class="lw_temperature">
-    <h3 id="windchillTemperatureHeadline" class="lw_temperature_headline">gefühlte Temperatur</h3>
+    <h3 id="windchillTemperatureHeadline" class="lw_temperature_headline">Temperatur gefühlt</h3>
     <canvas id="windchillTemperatureCanvas" class="lw_temperature_gauge" data-type="linear-gauge"
       data-height="400"
       data-min-value="-10"
@@ -111,7 +116,7 @@
     ></canvas>
   </div>
   <div id="waterTemperature" class="lw_temperature_small">
-    <h3 id="waterTemperatureHeadline" class="lw_temperature_headline">Wassertemperatur</h3>
+    <h3 id="waterTemperatureHeadline" class="lw_temperature_headline">Temperatur Wasser</h3>
     <canvas id="waterTemperatureCanvas" class="lw_temperature_gauge_small" data-type="linear-gauge"
       data-height="400"
       data-min-value="-10"
@@ -180,8 +185,14 @@
   </div>
   <div id="windDirectionMinutelyGraphContainer" class="lw_wind_graph_container">
     <h3 id="windDirectionMinutelyGraphHeadline" class="lw_chart_headline">Windrichtung letzte Stunde [°]</h3>
-    <div id="windDirectionMinutelyGraph" class="lw_chart">
+    <div id="windDirectionMinutelyGraph" class="lw_chart_container">
       <canvas id="windDirectionMinutelyCanvas" class="lw_chart"></canvas>
+    </div>
+  </div>
+  <div id="windDirectionHourlyGraphContainer" class="lw_wind_graph_container">
+    <h3 id="windDirectionHourlyGraphHeadline" class="lw_chart_headline">Windrichtung letzten Tag [°]</h3>
+    <div id="windDirectionHourlyGraph" class="lw_chart_container">
+      <canvas id="windDirectionHourlyCanvas" class="lw_chart"></canvas>
     </div>
   </div>
   <div id="lastRead" class="lw_lastRead"><span id="readIndicator" class="lw_readIndicator">&#x25CF</span> <span>Daten vom: </span><span id="now"></span></div>
@@ -227,8 +238,8 @@ function repaint() {
   
   var temperaturesDiv = document.getElementById('temperatures');
   var temperaturesDivWidth=temperaturesDiv.getBoundingClientRect().width;
-  var temperatureCanvasWidth = temperaturesDivWidth*0.12;
-  var temperatureCanvasHeight = temperaturesDivWidth*0.25;
+  var temperatureCanvasWidth = temperaturesDivWidth*0.08;
+  var temperatureCanvasHeight = temperaturesDivWidth*0.20;
 
   var airTemperatureCanvas = document.getElementById('airTemperatureCanvas');
   airTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)
@@ -250,63 +261,10 @@ function repaint() {
   var interval = setInterval(function(){ updateData(); }, 5000);
 }
 
-function createChart(groupId, chartId, label, canvasId) {
-    var color = Chart.helpers.color;
-    var config = {
-        type: 'line',
-        data: {
-            datasets: [{
-                label: label,
-                borderColor: 'rgba(111, 173, 207)',
-                backgroundColor: 'rgba(111, 173, 207)',
-                borderWidth: 2,
-                pointRadius : 3,
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            title: {
-                display: false,
-            },
-            legend: {
-                display: false,
-            },
-            scales: {
-                xAxes: [{
-                    type: 'time',
-                    display: true,
-                    scaleLabel: {
-                        display: false
-                    },
-                    ticks: {
-                        fontSize: 12,
-                        autoSkip: false
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: false
-                    },
-                    ticks: {
-                        fontSize: 12
-                    }
-                }]
-            }
-        }
-    };
-
-    var ctx = document.getElementById(canvasId).getContext('2d'); 
-    window[groupId + "_" + chartId] = new Chart(ctx, config);
-    if (debug)
-    {
-      console.debug("created chart " + groupId + "_" + chartId);
-    }
-}
-
-createChart("wind", "speedMinutely", 'Windgeschwindigkeit [kt]', 'windSpeedMinutelyCanvas');
-createChart("wind", "directionMinutely", 'Windrichtung [°]', 'windDirectionMinutelyCanvas');
+createChart("wind", "speedMinutely", 'Windgeschwindigkeit [kt]', 'windSpeedMinutelyCanvas', 'minute', 10);
+createChart("wind", "directionMinutely", 'Windrichtung [°]', 'windDirectionMinutelyCanvas', 'minute', 10);
+createChart("wind", "speedHourly", 'Windgeschwindigkeit [kt]', 'windSpeedHourlyCanvas', 'hour', 4);
+createChart("wind", "directionHourly", 'Windrichtung [°]', 'windDirectionHourlyCanvas', 'hour', 4);
 repaint();
 
 
