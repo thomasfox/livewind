@@ -77,7 +77,7 @@ function parseClientraw(url, request)
   var minute = values[30];
   var seconds = values[31];
   var day = values[35];
-  var month = values[36];
+  var month = values[36] - 1;
   var year = values[141];
   now = new Date(year, month, day, hour, minute, seconds);
   if (debug)
