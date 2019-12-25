@@ -224,22 +224,22 @@ function repaint() {
 
   var windSpeedCanvas = document.getElementById('windSpeedCanvas');
   windSpeedCanvas.height = windSpeedCanvas.width;
-  windSpeedGauge = new Gauge(windSpeedCanvas).setOptions(getSpeedGaugeOpts()); 
+  windSpeedGauge = new Gauge(windSpeedCanvas).setOptions(getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
   windSpeedGauge.maxValue = 20;
   windSpeedGauge.setMinValue(0); 
   windSpeedGauge.animationSpeed = 16; 
 
   var windSpeedGustsCanvas = document.getElementById('windSpeedGustsCanvas');
   windSpeedGustsCanvas.height = windSpeedGustsCanvas.width;
-  windSpeedGustsGauge = new Gauge(windSpeedGustsCanvas).setOptions(getSpeedGaugeOpts()); 
+  windSpeedGustsGauge = new Gauge(windSpeedGustsCanvas).setOptions(getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
   windSpeedGustsGauge.maxValue = 20;
   windSpeedGustsGauge.setMinValue(0); 
   windSpeedGustsGauge.animationSpeed = 16; 
   
   var temperaturesDiv = document.getElementById('temperatures');
   var temperaturesDivWidth=temperaturesDiv.getBoundingClientRect().width;
-  var temperatureCanvasWidth = temperaturesDivWidth*0.08;
-  var temperatureCanvasHeight = temperaturesDivWidth*0.20;
+  var temperatureCanvasWidth = temperaturesDivWidth * 0.08;
+  var temperatureCanvasHeight = temperaturesDivWidth * 0.20;
 
   var airTemperatureCanvas = document.getElementById('airTemperatureCanvas');
   airTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)

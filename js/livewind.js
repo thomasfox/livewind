@@ -205,7 +205,6 @@ function updateHourlyChart(groupId, chartId, values, startIndex1, startIndex21)
 function getGaugeOpts()
 {
   var gaugeOpts = {
-        angle: -0.5,
         lineWidth: 0.10,
         radiusScale: 0.9,
         pointer: {
@@ -216,8 +215,8 @@ function getGaugeOpts()
         limitMax: true,
         limitMin: true,
         colorStart: '#6FADCF',
-        colorStop: '#6FADCF',    
-        strokeColor: '#6FADCF',  
+        colorStop: '#6FADCF',
+        strokeColor: '#6FADCF',
         generateGradient: false,
         highDpiSupport: true, 
         renderTicks: {
@@ -241,11 +240,11 @@ function getDirectionGaugeOpts()
   return gaugeOpts;
 }
 
-function getSpeedGaugeOpts()
+function getSpeedGaugeOpts(fontSize)
 {
   var gaugeOpts = getGaugeOpts();
   gaugeOpts.staticLabels = {
-      font: "17px sans-serif",
+      font: fontSize + "px sans-serif",
       labels: [0, 5, 10, 15, 20],
       color: "#000000",
       fractionDigits: 0
@@ -309,6 +308,10 @@ function getBeaufort(windSpeedInKnots) {
 }
 
 function createChart(groupId, chartId, label, canvasId, timeUnit, timeStepSize) {
+  var windGaugesDiv = document.getElementById('windGauges');
+  var windGaugesWidth = windGaugesDiv.getBoundingClientRect().width;
+  var pointRadius = windGaugesWidth/450;
+  var tickFontSize = windGaugesWidth/100;
   var color = Chart.helpers.color;
   var config = {
     type: 'line',
@@ -318,7 +321,7 @@ function createChart(groupId, chartId, label, canvasId, timeUnit, timeStepSize) 
         borderColor: 'rgba(111, 173, 207)',
         backgroundColor: 'rgba(111, 173, 207)',
         borderWidth: 2,
-        pointRadius: 3,
+        pointRadius: pointRadius,
         fill: false
       }]
     },
@@ -339,7 +342,7 @@ function createChart(groupId, chartId, label, canvasId, timeUnit, timeStepSize) 
             display: false
           },
           ticks: {
-            fontSize: 12
+            fontSize: tickFontSize
           },
           time: {
             unit: timeUnit,
