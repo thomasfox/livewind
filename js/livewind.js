@@ -9,6 +9,26 @@ function livewind_init()
   document.body.style.fontSize = bodyFontSize + "px";
   var windGauges = document.getElementById('windGauges');
   windGauges.style.height = (windGauges.clientWidth * 0.17) + "px";
+  var temperatures = document.getElementById('temperatures');
+  temperatures.style.height = (windGauges.clientWidth * 0.19) + "px";
+  
+  var recordDiv = document.getElementById("recordsDiv");
+  var recordsButton = document.getElementById("recordsButton");
+  var recordsClose = document.getElementById("recordsClose");
+
+  recordsButton.onclick = function() {
+    recordDiv.style.display = "block";
+  }
+
+  recordsClose.onclick = function() {
+    recordDiv.style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    if (event.target == recordDiv) {
+      recordDiv.style.display = "none";
+    }
+  } 
 }
 
 // TODO remove global now variable
@@ -116,8 +136,30 @@ function parseClientrawextra(url, request)
   {
     return;
   }
-  updateHourlyChart("wind","speedHourly", values, 1, 562);
-  updateHourlyChart("wind","directionHourly", values, 536, 590);
+  updateHourlyChart("wind", "speedHourly", values, 1, 562);
+  updateHourlyChart("wind", "directionHourly", values, 536, 590);
+  var recordIndexMap = getClientrawExtraRecordIndexMap();
+  var recordsTable = document.getElementById('recordsTable');
+  while (recordsTable.firstChild) {
+    recordsTable.removeChild(recordsTable.firstChild);
+  }
+  for (var [key, valueIndex] of recordIndexMap['Monatsrekorde']) 
+  {
+    console.debug(key);
+    var value = values[valueIndex];
+    var unit = recordIndexMap.units.get(key);
+    var keyText = recordIndexMap.texts.get(key);
+    var row = document.createElement("tr");
+    var keyColumn = document.createElement("td");
+    var valueColumn = document.createElement("td");
+    row.appendChild(keyColumn);
+    row.appendChild(valueColumn);
+    var keyTextnode = document.createTextNode(keyText);
+    keyColumn.appendChild(keyTextnode);
+    var valueTextnode = document.createTextNode(value + ' ' + unit);
+    valueColumn.appendChild(valueTextnode);
+    recordsTable.appendChild(row);
+  }
 
   if (debug)
   {
@@ -372,4 +414,64 @@ function createChart(groupId, chartId, label, canvasId, timeUnit, timeStepSize) 
   {
     console.debug("created chart " + groupId + "_" + chartId);
   }
+}
+function getClientrawExtraRecordIndexMap()
+{
+  var result = {
+    'Monatsrekorde': new Map([
+      ['maxGust', 73],
+      ['maxGustDirection', 139],
+      ['maxWind', 109],
+      ['maxWindDirection', 145],
+      ['maxTemp', 61],
+      ['minTemp', 67],
+      ['maxRainRate', 79],
+      ['minPressure', 85],
+      ['maxPressure', 91],
+      ['maxDailyRainRate', 97],
+      ['maxHourlyRainRate', 103],
+      ['minWindchill', 133],
+      ['maxAverageTempDay', 151],
+      ['minAverageTempDay', 163],
+      ['maxAverageTempNight', 169],
+      ['minAverageTempNight', 157]
+    ]),
+    'texts': new Map([
+      ['maxGust', 'Stärkste Böe'],
+      ['maxGustDirection', 'Richtung der stärksten Böe'],
+      ['maxWind', 'Höchste durchschnittliche Windgeschwindigkeit'],
+      ['maxWindDirection', 'Richtung der höchsten durchschnittlichen Windgeschwindigkeit'],
+      ['maxTemp', 'Höchste Temperatur'],
+      ['minTemp', 'Tiefste Temperatur'],
+      ['maxRainRate', 'höchste Regenrate'],
+      ['minPressure', 'Tiefster Luftdruck'],
+      ['maxPressure', 'Höchster Luftdruck'],
+      ['maxDailyRainRate', 'Höchster Tagensniederschlag'],
+      ['maxHourlyRainRate', 'Höchster stündlicher Niederschlag'],
+      ['minWindchill', 'Tiefste gefühlte Temeperatur'],
+      ['maxAverageTempDay', 'Wärmster Tag (gemittelt über Tageslicht)'],
+      ['minAverageTempDay', 'Kältester Tag (gemittelt über Tageslicht)'],
+      ['maxAverageTempNight', 'Wärmste Nacht (gemittelt über Dunkelheit)'],
+      ['minAverageTempNight', 'Kälteste Nacht (gemittelt über Dunkelheit)']
+    ]),
+    'units': new Map([
+        ['maxGust', 'kt'],
+        ['maxGustDirection', '°'],
+        ['maxWind', 'kt'],
+        ['maxWindDirection', '°'],
+        ['maxTemp', '°C'],
+        ['minTemp', '°C'],
+        ['maxRainRate', 'mm/?'],
+        ['minPressure', 'mBar'],
+        ['maxPressure', 'mBar'],
+        ['maxDailyRainRate', 'mm'],
+        ['maxHourlyRainRate', 'mm'],
+        ['minWindchill', '°C'],
+        ['maxAverageTempDay', '°C'],
+        ['minAverageTempDay', '°C'],
+        ['maxAverageTempNight', '°C'],
+        ['minAverageTempNight', '°C']
+    ])
+  }
+  return result;
 }

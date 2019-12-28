@@ -188,6 +188,8 @@
     <div id="windDirectionMinutelyGraph" class="lw_chart_container">
       <canvas id="windDirectionMinutelyCanvas" class="lw_chart"></canvas>
     </div>
+    <div class="lw_horizontal_spacer">&nbsp;</div>
+    <button id="recordsButton" class="lw_records_button">Rekorde</button>
   </div>
   <div id="windDirectionHourlyGraphContainer" class="lw_wind_graph_container">
     <h3 id="windDirectionHourlyGraphHeadline" class="lw_chart_headline">Windrichtung letzten Tag [°]</h3>
@@ -195,10 +197,15 @@
       <canvas id="windDirectionHourlyCanvas" class="lw_chart"></canvas>
     </div>
   </div>
+  <br/>
   <div id="lastRead" class="lw_lastRead"><span id="readIndicator" class="lw_readIndicator">&#x25CF</span> <span>Daten vom: </span><span id="now"></span></div>
 </div>
-
-<div id="output"></div>
+<div id="recordsDiv" class="lw_records">
+  <div class="lw_recordsContent">
+    <span id="recordsClose" class="lw_records_close">&times;</span>
+    <table id="recordsTable"></table>
+  </div>
+</div>
 <script src="js/polyfill.js"></script>
 <script src="js/gauge.min.js"></script>
 <script src="js/canvas-gauge-linear.min.js"></script>
