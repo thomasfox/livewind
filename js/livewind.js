@@ -31,6 +31,18 @@ function livewind_init()
   } 
 }
 
+function changeRecordSelector(value)
+{
+  var otherRecords = ['Month','Year','AllTime'];
+  for (var toHide of otherRecords)
+  {
+    document.getElementById('records' + toHide + 'Table').style.display ='none';
+    document.getElementById('records' + toHide + 'Headline').style.display ='none';
+  }
+  document.getElementById('records' + value + 'Table').style.display ='table';
+  document.getElementById('records' + value + 'Headline').style.display ='table';
+}
+
 // TODO remove global now variable
 var now = new Date();
 
@@ -120,8 +132,8 @@ function parseClientrawhour(url, request)
   {
     return;
   }
-  updateMinutelyChart("wind","speedMinutely", values, 1);
-  updateMinutelyChart("wind","directionMinutely", values, 121);
+  updateMinutelyChart("wind", "speedMinutely", values, 1);
+  updateMinutelyChart("wind", "directionMinutely", values, 121);
 
   if (debug)
   {
@@ -139,26 +151,50 @@ function parseClientrawextra(url, request)
   updateHourlyChart("wind", "speedHourly", values, 1, 562);
   updateHourlyChart("wind", "directionHourly", values, 536, 590);
   var recordIndexMap = getClientrawExtraRecordIndexMap();
-  var recordsTable = document.getElementById('recordsTable');
-  while (recordsTable.firstChild) {
-    recordsTable.removeChild(recordsTable.firstChild);
-  }
-  for (var [key, valueIndex] of recordIndexMap['Monatsrekorde']) 
+  var recordsTableMap = new Map([
+    ['month',document.getElementById('recordsMonthTable')],
+    ['year',document.getElementById('recordsYearTable')],
+    ['allTime', document.getElementById('recordsAllTimeTable')]
+  ]);
+  for (var [timespan, recordsTable] of recordsTableMap)
   {
-    console.debug(key);
-    var value = values[valueIndex];
-    var unit = recordIndexMap.units.get(key);
-    var keyText = recordIndexMap.texts.get(key);
-    var row = document.createElement("tr");
-    var keyColumn = document.createElement("td");
-    var valueColumn = document.createElement("td");
-    row.appendChild(keyColumn);
-    row.appendChild(valueColumn);
-    var keyTextnode = document.createTextNode(keyText);
-    keyColumn.appendChild(keyTextnode);
-    var valueTextnode = document.createTextNode(value + ' ' + unit);
-    valueColumn.appendChild(valueTextnode);
-    recordsTable.appendChild(row);
+    while (recordsTable.firstChild) 
+    {
+      recordsTable.removeChild(recordsTable.firstChild);
+    }
+    var valueColumn;
+    for (var [key, valueIndex] of recordIndexMap[timespan])
+    {
+      var value = values[valueIndex];
+      var unit = recordIndexMap.units.get(key);
+      if (key == 'maxGustDirection' || key == 'maxWindDirection')
+      {
+        var valueTextnode = document.createTextNode(' (' + value + unit + ')');
+        valueColumn.appendChild(valueTextnode);
+        continue;
+      }
+      var hour = values[valueIndex + 1];
+      var minute = values[valueIndex + 2];
+      var day = values[valueIndex + 3];
+      var month = values[valueIndex + 4];
+      var year = values[valueIndex + 5];
+      var keyText = recordIndexMap.texts.get(key);
+      var row = document.createElement("tr");
+      var keyColumn = document.createElement("td");
+      valueColumn = document.createElement("td");
+      var timestampColumn = document.createElement("td");
+      row.appendChild(keyColumn);
+      row.appendChild(valueColumn);
+      row.appendChild(timestampColumn);
+      var keyTextnode = document.createTextNode(keyText);
+      keyColumn.appendChild(keyTextnode);
+      var valueTextnode = document.createTextNode(value + ' ' + unit);
+      valueColumn.appendChild(valueTextnode);
+      var timestampTextnode = document.createTextNode(
+          day + '.' + month + '.' + year + ' ' + hour + ':' + minute);
+      timestampColumn.appendChild(timestampTextnode);
+      recordsTable.appendChild(row);
+    }
   }
 
   if (debug)
@@ -418,24 +454,60 @@ function createChart(groupId, chartId, label, canvasId, timeUnit, timeStepSize) 
 function getClientrawExtraRecordIndexMap()
 {
   var result = {
-    'Monatsrekorde': new Map([
+    'month': new Map([
       ['maxGust', 73],
       ['maxGustDirection', 139],
       ['maxWind', 109],
       ['maxWindDirection', 145],
       ['maxTemp', 61],
       ['minTemp', 67],
-      ['maxRainRate', 79],
-      ['minPressure', 85],
-      ['maxPressure', 91],
-      ['maxDailyRainRate', 97],
-      ['maxHourlyRainRate', 103],
       ['minWindchill', 133],
       ['maxAverageTempDay', 151],
       ['minAverageTempDay', 163],
       ['maxAverageTempNight', 169],
-      ['minAverageTempNight', 157]
+      ['minAverageTempNight', 157],
+      ['minPressure', 85],
+      ['maxPressure', 91],
+      ['maxRainRate', 79],
+      ['maxDailyRain', 97],
+      ['maxHourlyRain', 103]
     ]),
+    'year': new Map([
+        ['maxGust', 199],
+        ['maxGustDirection', 265],
+        ['maxWind', 235],
+        ['maxWindDirection', 271],
+        ['maxTemp', 187],
+        ['minTemp', 193],
+        ['minWindchill', 259],
+        ['maxAverageTempDay', 277],
+        ['minAverageTempDay', 289],
+        ['maxAverageTempNight', 295],
+        ['minAverageTempNight', 283],
+        ['minPressure', 211],
+        ['maxPressure', 217],
+        ['maxRainRate', 205],
+        ['maxDailyRain', 223],
+        ['maxHourlyRain', 229]
+      ]),
+      'allTime': new Map([
+          ['maxGust', 325],
+          ['maxGustDirection', 391],
+          ['maxWind', 361],
+          ['maxWindDirection', 397],
+          ['maxTemp', 313],
+          ['minTemp', 319],
+          ['minWindchill', 385],
+          ['maxAverageTempDay', 403],
+          ['minAverageTempDay', 415],
+          ['maxAverageTempNight', 421],
+          ['minAverageTempNight', 409],
+          ['minPressure', 337],
+          ['maxPressure', 343],
+          ['maxRainRate', 331],
+          ['maxDailyRain', 349],
+          ['maxHourlyRain', 355]
+        ]),
     'texts': new Map([
       ['maxGust', 'Stärkste Böe'],
       ['maxGustDirection', 'Richtung der stärksten Böe'],
@@ -443,16 +515,16 @@ function getClientrawExtraRecordIndexMap()
       ['maxWindDirection', 'Richtung der höchsten durchschnittlichen Windgeschwindigkeit'],
       ['maxTemp', 'Höchste Temperatur'],
       ['minTemp', 'Tiefste Temperatur'],
-      ['maxRainRate', 'höchste Regenrate'],
-      ['minPressure', 'Tiefster Luftdruck'],
-      ['maxPressure', 'Höchster Luftdruck'],
-      ['maxDailyRainRate', 'Höchster Tagensniederschlag'],
-      ['maxHourlyRainRate', 'Höchster stündlicher Niederschlag'],
       ['minWindchill', 'Tiefste gefühlte Temeperatur'],
       ['maxAverageTempDay', 'Wärmster Tag (gemittelt über Tageslicht)'],
       ['minAverageTempDay', 'Kältester Tag (gemittelt über Tageslicht)'],
       ['maxAverageTempNight', 'Wärmste Nacht (gemittelt über Dunkelheit)'],
-      ['minAverageTempNight', 'Kälteste Nacht (gemittelt über Dunkelheit)']
+      ['minAverageTempNight', 'Kälteste Nacht (gemittelt über Dunkelheit)'],
+      ['minPressure', 'Tiefster Luftdruck'],
+      ['maxPressure', 'Höchster Luftdruck'],
+      ['maxRainRate', 'höchste Regenrate'],
+      ['maxDailyRain', 'Höchster Tagensniederschlag'],
+      ['maxHourlyRain', 'Höchster stündlicher Niederschlag']
     ]),
     'units': new Map([
         ['maxGust', 'kt'],
@@ -461,16 +533,16 @@ function getClientrawExtraRecordIndexMap()
         ['maxWindDirection', '°'],
         ['maxTemp', '°C'],
         ['minTemp', '°C'],
-        ['maxRainRate', 'mm/?'],
-        ['minPressure', 'mBar'],
-        ['maxPressure', 'mBar'],
-        ['maxDailyRainRate', 'mm'],
-        ['maxHourlyRainRate', 'mm'],
         ['minWindchill', '°C'],
         ['maxAverageTempDay', '°C'],
         ['minAverageTempDay', '°C'],
         ['maxAverageTempNight', '°C'],
-        ['minAverageTempNight', '°C']
+        ['minAverageTempNight', '°C'],
+        ['minPressure', 'mBar'],
+        ['maxPressure', 'mBar'],
+        ['maxRainRate', 'mm/?'],
+        ['maxDailyRain', 'mm'],
+        ['maxHourlyRain', 'mm']
     ])
   }
   return result;

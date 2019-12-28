@@ -177,7 +177,7 @@ canvas.lw_chart {
   background-color: #FFFFFF;
 }
 
-.lw_records {
+.lw_records_modal {
   display: none;
   position: fixed;
   z-index: 1;
@@ -211,3 +211,15 @@ canvas.lw_chart {
   text-decoration: none;
   cursor: pointer;
 } 
+
+table.lw_record {
+  width:95%;
+  border-collapse: separate;
+  border-spacing: 4px;
+}
+
+.lw_recordSelector {
+  padding: 0.5% 2%;
+  margin: 2% 5%;
+  font-size: 100%;
+}

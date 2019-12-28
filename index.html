@@ -200,10 +200,21 @@
   <br/>
   <div id="lastRead" class="lw_lastRead"><span id="readIndicator" class="lw_readIndicator">&#x25CF</span> <span>Daten vom: </span><span id="now"></span></div>
 </div>
-<div id="recordsDiv" class="lw_records">
+<div id="recordsDiv" class="lw_records_modal">
   <div class="lw_recordsContent">
     <span id="recordsClose" class="lw_records_close">&times;</span>
-    <table id="recordsTable"></table>
+    <h2 id="recordsMonthHeadline" class="lw_record">Monatsrekorde</h2>
+    <table id="recordsMonthTable" class="lw_record"></table>
+    <h2 id="recordsYearHeadline" style="display: none" class="lw_record">Jahresrekorde</h2>
+    <table id="recordsYearTable" style="display: none" class="lw_record"></table>
+    <h2 id="recordsAllTimeHeadline" style="display: none" class="lw_record">Allzeitrekorde</h2>
+    <table id="recordsAllTimeTable" style="display: none" class="lw_record"></table>
+    <hr>
+    <select name="recordSelector" onchange="changeRecordSelector(this.value)" class="lw_recordSelector">
+      <option value="Month">Monatsrekorde</option>
+      <option value="Year">Jahresrekorde</option>
+      <option value="AllTime">Allzeitrekorde</option>
+    </select>
   </div>
 </div>
 <script src="js/polyfill.js"></script>
