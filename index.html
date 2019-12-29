@@ -231,60 +231,18 @@ var windDirectionGauge;
 var windSpeedGauge;
 var windSpeedGustsGauge;
 
-function repaint() {
-  var windDirectionCanvas = document.getElementById('windDirectionCanvas');
-  windDirectionCanvas.height = windDirectionCanvas.width;
-  document.getElementById('windDirectionGauge').height = windDirectionCanvas.width;
-  windDirectionGauge = new Gauge(windDirectionCanvas).setOptions(getDirectionGaugeOpts()); 
-  windDirectionGauge.maxValue = 360;
-  windDirectionGauge.setMinValue(0); 
-  windDirectionGauge.animationSpeed = 16; 
-
-  var windSpeedCanvas = document.getElementById('windSpeedCanvas');
-  windSpeedCanvas.height = windSpeedCanvas.width;
-  windSpeedGauge = new Gauge(windSpeedCanvas).setOptions(getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
-  windSpeedGauge.maxValue = 20;
-  windSpeedGauge.setMinValue(0); 
-  windSpeedGauge.animationSpeed = 16; 
-
-  var windSpeedGustsCanvas = document.getElementById('windSpeedGustsCanvas');
-  windSpeedGustsCanvas.height = windSpeedGustsCanvas.width;
-  windSpeedGustsGauge = new Gauge(windSpeedGustsCanvas).setOptions(getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
-  windSpeedGustsGauge.maxValue = 20;
-  windSpeedGustsGauge.setMinValue(0); 
-  windSpeedGustsGauge.animationSpeed = 16; 
-  
-  var temperaturesDiv = document.getElementById('temperatures');
-  var temperaturesDivWidth=temperaturesDiv.getBoundingClientRect().width;
-  var temperatureCanvasWidth = temperaturesDivWidth * 0.08;
-  var temperatureCanvasHeight = temperaturesDivWidth * 0.20;
-
-  var airTemperatureCanvas = document.getElementById('airTemperatureCanvas');
-  airTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)
-  airTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight)
-  
-  var windchillTemperatureCanvas = document.getElementById('windchillTemperatureCanvas');
-  windchillTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)
-  windchillTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight)
-  
-  var waterTemperatureCanvas = document.getElementById('waterTemperatureCanvas');
-  waterTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)
-  waterTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight)
-  
-  var dailyRainCanvas = document.getElementById('dailyRainCanvas');
-  dailyRainCanvas.setAttribute('data-width', temperatureCanvasWidth)
-  dailyRainCanvas.setAttribute('data-height', temperatureCanvasHeight)
-
-  updateData();
-  var interval = setInterval(function(){ updateData(); }, 5000);
-}
-
-createChart("wind", "speedMinutely", 'Windgeschwindigkeit [kt]', 'windSpeedMinutelyCanvas', 'minute', 10);
-createChart("wind", "directionMinutely", 'Windrichtung [°]', 'windDirectionMinutelyCanvas', 'minute', 10);
-createChart("wind", "speedHourly", 'Windgeschwindigkeit [kt]', 'windSpeedHourlyCanvas', 'hour', 4);
-createChart("wind", "directionHourly", 'Windrichtung [°]', 'windDirectionHourlyCanvas', 'hour', 4);
+createAndStoreChart("wind_speedMinutely", 'Windgeschwindigkeit [kt]', 'minute', 10, 'windSpeedMinutelyCanvas');
+createAndStoreChart("wind_directionMinutely", 'Windrichtung [°]', 'minute', 10, 'windDirectionMinutelyCanvas');
+createAndStoreChart("wind_speedHourly", 'Windgeschwindigkeit [kt]', 'hour', 4, 'windSpeedHourlyCanvas');
+createAndStoreChart("wind_directionHourly", 'Windrichtung [°]', 'hour', 4, 'windDirectionHourlyCanvas');
+createAndStoreChartConfig("temperature_minutely", 'Temperatur [°C]', 'minute', 10);
+createAndStoreChartConfig("humidity_minutely", 'Luftfeuchtigkeit [%]', 'minute', 10);
+createAndStoreChartConfig("pressure_minutely", 'Luftdruck [mBar]', 'minute', 10);
+createAndStoreChartConfig("temperature_hourly", 'Temperatur [°C]', 'hour', 4);
+createAndStoreChartConfig("rain_hourly", 'Regen [mm]', 'hour', 4);
+createAndStoreChartConfig("humidity_hourly", 'Luftfeuchtigkeit [%]', 'hour', 4);
+createAndStoreChartConfig("pressure_hourly", 'Luftdruck [mBar]', 'hour', 4);
 repaint();
-
 
 </script>
 </body>

@@ -31,6 +31,54 @@ function livewind_init()
   } 
 }
 
+function repaint() {
+  var windDirectionCanvas = document.getElementById('windDirectionCanvas');
+  windDirectionCanvas.height = windDirectionCanvas.width;
+  document.getElementById('windDirectionGauge').height = windDirectionCanvas.width;
+  windDirectionGauge = new Gauge(windDirectionCanvas).setOptions(getDirectionGaugeOpts()); 
+  windDirectionGauge.maxValue = 360;
+  windDirectionGauge.setMinValue(0); 
+  windDirectionGauge.animationSpeed = 16; 
+
+  var windSpeedCanvas = document.getElementById('windSpeedCanvas');
+  windSpeedCanvas.height = windSpeedCanvas.width;
+  windSpeedGauge = new Gauge(windSpeedCanvas).setOptions(getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
+  windSpeedGauge.maxValue = 20;
+  windSpeedGauge.setMinValue(0); 
+  windSpeedGauge.animationSpeed = 16; 
+
+  var windSpeedGustsCanvas = document.getElementById('windSpeedGustsCanvas');
+  windSpeedGustsCanvas.height = windSpeedGustsCanvas.width;
+  windSpeedGustsGauge = new Gauge(windSpeedGustsCanvas).setOptions(getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
+  windSpeedGustsGauge.maxValue = 20;
+  windSpeedGustsGauge.setMinValue(0); 
+  windSpeedGustsGauge.animationSpeed = 16; 
+
+  var temperaturesDiv = document.getElementById('temperatures');
+  var temperaturesDivWidth=temperaturesDiv.getBoundingClientRect().width;
+  var temperatureCanvasWidth = temperaturesDivWidth * 0.08;
+  var temperatureCanvasHeight = temperaturesDivWidth * 0.20;
+
+  var airTemperatureCanvas = document.getElementById('airTemperatureCanvas');
+  airTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)
+  airTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight)
+  
+  var windchillTemperatureCanvas = document.getElementById('windchillTemperatureCanvas');
+  windchillTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)
+  windchillTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight)
+
+  var waterTemperatureCanvas = document.getElementById('waterTemperatureCanvas');
+  waterTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)
+  waterTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight)
+
+  var dailyRainCanvas = document.getElementById('dailyRainCanvas');
+  dailyRainCanvas.setAttribute('data-width', temperatureCanvasWidth)
+  dailyRainCanvas.setAttribute('data-height', temperatureCanvasHeight)
+
+  updateData();
+  var interval = setInterval(function(){ updateData(); }, 5000);
+}
+
 function changeRecordSelector(value)
 {
   var otherRecords = ['Month','Year','AllTime'];
@@ -132,8 +180,11 @@ function parseClientrawhour(url, request)
   {
     return;
   }
-  updateMinutelyChart("wind", "speedMinutely", values, 1);
-  updateMinutelyChart("wind", "directionMinutely", values, 121);
+  updateMinutelyChart("wind_speedMinutely", values, 1);
+  updateMinutelyChart("wind_directionMinutely", values, 121);
+  updateMinutelyChart("temperature_minutely", values, 181);
+  updateMinutelyChart("humidity_minutely", values, 241);
+  updateMinutelyChart("pressure_minutely", values, 301);
 
   if (debug)
   {
@@ -148,8 +199,12 @@ function parseClientrawextra(url, request)
   {
     return;
   }
-  updateHourlyChart("wind", "speedHourly", values, 1, 562);
-  updateHourlyChart("wind", "directionHourly", values, 536, 590);
+  updateHourlyChart("wind_speedHourly", values, 1, 562);
+  updateHourlyChart("wind_directionHourly", values, 536, 590);
+  updateHourlyChart("temperature_hourly", values, 21, 566);
+  updateHourlyChart("rain_hourly", values, 41, 570);
+  updateHourlyChart("humidity_hourly", values, 611, 631);
+  updateHourlyChart("pressure_hourly", values, 439, 574);
   var recordIndexMap = getClientrawExtraRecordIndexMap();
   var recordsTableMap = new Map([
     ['month',document.getElementById('recordsMonthTable')],
@@ -220,18 +275,18 @@ function parseValues(url, request)
   return values;
 }
 
-function updateMinutelyChart(groupId, chartId, values, startIndex)
+function updateMinutelyChart(configId, values, startIndex)
 {
   if (now == null)
   {
-    console.warn("not updating chart " + groupId + "_" + chartId + " because now is not set");
+    console.warn("not updating chart " + configId + " because now is not set");
     return;
   }
   if (debug)
   {
-    console.debug("updating chart " + groupId + "_" + chartId);
+    console.debug("updating chart " + configId);
   }
-  var chartConfig = window[groupId + "_" + chartId].config;
+  var chartConfig = getChart(configId).config;
   chartConfig.data.datasets[0].data = [];
   for (var i = startIndex; i < 60 + startIndex; i++) 
   {
@@ -242,21 +297,21 @@ function updateMinutelyChart(groupId, chartId, values, startIndex)
     datapoint.y = parseFloat(values[i]);
     chartConfig.data.datasets[0].data.push(datapoint);
   }
-  window[groupId + "_" + chartId].update();
+  getChart(configId).update();
 }
 
-function updateHourlyChart(groupId, chartId, values, startIndex1, startIndex21)
+function updateHourlyChart(configId, values, startIndex1, startIndex21)
 {
   if (now == null)
   {
-    console.warn("not updating chart " + groupId + "_" + chartId + " because now is not set");
+    console.warn("not updating chart " + configId + " because now is not set");
     return;
   }
   if (debug)
   {
-    console.debug("updating chart " + groupId + "_" + chartId);
+    console.debug("updating chart " + configId);
   }
-  var chartConfig = window[groupId + "_" + chartId].config;
+  var chartConfig = getChart(configId).config;
   chartConfig.data.datasets[0].data = [];
   for (var i = startIndex1; i < 20 + startIndex1; i++) 
   {
@@ -276,9 +331,8 @@ function updateHourlyChart(groupId, chartId, values, startIndex1, startIndex21)
     datapoint.y = parseFloat(values[i]);
     chartConfig.data.datasets[0].data.push(datapoint);
   }
-  window[groupId + "_" + chartId].update();
+  getChart(configId).update();
 }
-
 
 function getGaugeOpts()
 {
@@ -385,7 +439,7 @@ function getBeaufort(windSpeedInKnots) {
   return 12;
 }
 
-function createChart(groupId, chartId, label, canvasId, timeUnit, timeStepSize) {
+function createChartConfig(label, timeUnit, timeStepSize) {
   var windGaugesDiv = document.getElementById('windGauges');
   var windGaugesWidth = windGaugesDiv.getBoundingClientRect().width;
   var pointRadius = windGaugesWidth/450;
@@ -443,14 +497,59 @@ function createChart(groupId, chartId, label, canvasId, timeUnit, timeStepSize) 
       }
     }
   };
+  return config;
+}
 
+function createAndStoreChart(configId, label, timeUnit, timeStepSize, canvasId) {
+  var config = createChartConfig(label, timeUnit, timeStepSize);
   var ctx = document.getElementById(canvasId).getContext('2d'); 
-  window[groupId + "_" + chartId] = new Chart(ctx, config);
+  setChart(configId, new Chart(ctx, config));
   if (debug)
   {
-    console.debug("created chart " + groupId + "_" + chartId);
+    console.debug("created chart " + configId);
   }
 }
+
+function createAndStoreChartConfig(configId, label, timeUnit, timeStepSize) {
+  var config = createChartConfig(label, timeUnit, timeStepSize);
+  setChartConfig(configId, config);
+  if (debug)
+  {
+    console.debug("created chart config " + configId);
+  }
+}
+
+function getChart(configId)
+{
+  return window.livewind[configId];
+}
+
+function setChart(configId, chart)
+{
+  initLivewindNamespace();
+  window.livewind[configId] = chart;
+}
+
+function setChartConfig(configId, config)
+{
+  initLivewindNamespace();
+  if (window.livewind[configId] == null)
+  {
+    window.livewind[configId] = new Object();
+    window.livewind[configId].update = function() {};
+  }
+  window.livewind[configId].config = config;
+}
+
+function initLivewindNamespace()
+{
+  if (window.livewind == null)
+  {
+    window.livewind = {};
+  }
+}
+
+
 function getClientrawExtraRecordIndexMap()
 {
   var result = {
