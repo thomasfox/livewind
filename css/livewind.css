@@ -159,11 +159,23 @@ canvas.lw_chart {
   opacity: 0;
 }
 
-.lw_horizontal_spacer {
+.lw_vertical_spacer {
   height: 100%;
 }
 
-.lw_records_button {
+select.lw_graph {
+  display: inline-block;
+  font-size: 110%;
+  padding: 1.7% 3%;
+  border: .1em solid #000000;
+  box-sizing: border-box;
+  color: #000000;
+  background-color: #E7F3FF;
+  text-align: center;
+  margin-left: 3%;
+}
+
+button.lw_records {
   display: inline-block;
   font-size: 110%;
   padding: 2% 5%;
@@ -173,7 +185,8 @@ canvas.lw_chart {
   background-color: #E7F3FF;
   text-align: center;
 }
-.lw_records_button:hover{
+
+button.lw_records:hover{
   background-color: #FFFFFF;
 }
 
@@ -192,7 +205,7 @@ canvas.lw_chart {
 
 .lw_recordsContent {
   background-color: #fefefe;
-  margin: 15% auto;
+  margin: 5% auto;
   padding: 20px;
   border: 1px solid #888;
   width: 50%;
@@ -212,13 +225,13 @@ canvas.lw_chart {
   cursor: pointer;
 } 
 
-table.lw_record {
+table.lw_records {
   width:95%;
   border-collapse: separate;
   border-spacing: 4px;
 }
 
-.lw_recordSelector {
+select.lw_records {
   padding: 0.5% 2%;
   margin: 2% 5%;
   font-size: 100%;

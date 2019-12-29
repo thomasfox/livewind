@@ -13,22 +13,77 @@ function livewind_init()
   temperatures.style.height = (windGauges.clientWidth * 0.19) + "px";
   
   var recordDiv = document.getElementById("recordsDiv");
-  var recordsButton = document.getElementById("recordsButton");
   var recordsClose = document.getElementById("recordsClose");
-
-  recordsButton.onclick = function() {
-    recordDiv.style.display = "block";
-  }
 
   recordsClose.onclick = function() {
     recordDiv.style.display = "none";
+    if (debug)
+    {
+      console.debug("handled recordsClose button click")
+    }
   }
 
   window.onclick = function(event) {
     if (event.target == recordDiv) {
       recordDiv.style.display = "none";
+      if (debug)
+      {
+        console.debug("handled recordsClose click")
+      }
     }
-  } 
+  }
+}
+
+function handleRecordsButtonClick() {
+  handleRecordSelectorChange();
+  var recordDiv = document.getElementById("recordsDiv");
+  recordDiv.style.display = "table-cell";
+  if (debug)
+  {
+    console.debug("handled records button click 123")
+  }
+}
+
+function handleGraphDisplayChange() {
+  var graphDisplaySelect = document.getElementById("graphDisplaySelect");
+  if (graphDisplaySelect.value == 'wind_speed:wind_direction')
+  {
+    changeChartsTo('wind_speed', 'Wind', 'kt', 'wind_direction', 'Windrichtung', '°');
+  }
+  else
+  {
+    changeChartsTo('temperature', 'Temperatur', '°C', 'pressure', 'Luftdruck', 'mBar');
+  }
+  if (debug)
+  {
+    console.debug("handled graphDisplay change to " + graphDisplaySelect.value)
+  }
+}
+
+function changeChartsTo(topEntity, topLabel, topUnit, bottomEntity, bottomLabel, bottomUnit)
+{
+  changeChartDataTo('minutelyTop', topEntity + '_minutely', topLabel + ' letzte Stunde [' + topUnit + ']');
+  changeChartDataTo('hourlyTop', topEntity + '_hourly', topLabel + ' letzten Tag [' + topUnit +']');
+  changeChartDataTo('minutelyBottom', bottomEntity + '_minutely', bottomLabel + ' letzte Stunde [' + bottomUnit +']');
+  changeChartDataTo('hourlyBottom', bottomEntity + '_hourly', bottomLabel + ' letzten Tag [' + bottomUnit +']');
+  if (debug)
+  {
+    console.debug("changed charts to " + topEntity + " and " + bottomEntity);
+  }
+}
+
+function changeChartDataTo(graphId, chartDatasetId, headlineText)
+{
+  var chartDataset = getChartDataset(chartDatasetId);
+  var chart = getChart(graphId)
+  chart.config.data.datasets[0] = chartDataset;
+  chart.update();
+  var headline = document.getElementById(graphId + 'GraphHeadline');
+  headline.innerHTML = headlineText;
+  if (debug)
+  {
+    console.debug('changed graph ' + graphId + ' data to ' + chartDatasetId);
+  }
 }
 
 function repaint() {
@@ -79,8 +134,9 @@ function repaint() {
   var interval = setInterval(function(){ updateData(); }, 5000);
 }
 
-function changeRecordSelector(value)
+function handleRecordSelectorChange()
 {
+  var value = document.getElementById('recordSelector').value;
   var otherRecords = ['Month','Year','AllTime'];
   for (var toHide of otherRecords)
   {
@@ -180,11 +236,13 @@ function parseClientrawhour(url, request)
   {
     return;
   }
-  updateMinutelyChart("wind_speedMinutely", values, 1);
-  updateMinutelyChart("wind_directionMinutely", values, 121);
-  updateMinutelyChart("temperature_minutely", values, 181);
-  updateMinutelyChart("humidity_minutely", values, 241);
-  updateMinutelyChart("pressure_minutely", values, 301);
+  updateMinutelyChartData("wind_speed_minutely", values, 1);
+  updateMinutelyChartData("wind_direction_minutely", values, 121);
+  updateMinutelyChartData("temperature_minutely", values, 181);
+  updateMinutelyChartData("humidity_minutely", values, 241);
+  updateMinutelyChartData("pressure_minutely", values, 301);
+  getChart('minutelyTop').update();
+  getChart('minutelyBottom').update();
 
   if (debug)
   {
@@ -199,12 +257,14 @@ function parseClientrawextra(url, request)
   {
     return;
   }
-  updateHourlyChart("wind_speedHourly", values, 1, 562);
-  updateHourlyChart("wind_directionHourly", values, 536, 590);
-  updateHourlyChart("temperature_hourly", values, 21, 566);
-  updateHourlyChart("rain_hourly", values, 41, 570);
-  updateHourlyChart("humidity_hourly", values, 611, 631);
-  updateHourlyChart("pressure_hourly", values, 439, 574);
+  updateHourlyChartData("wind_speed_hourly", values, 1, 562);
+  updateHourlyChartData("wind_direction_hourly", values, 536, 590);
+  updateHourlyChartData("temperature_hourly", values, 21, 566);
+  updateHourlyChartData("rain_hourly", values, 41, 570);
+  updateHourlyChartData("humidity_hourly", values, 611, 631);
+  updateHourlyChartData("pressure_hourly", values, 439, 574);
+  getChart('hourlyTop').update();
+  getChart('hourlyBottom').update();
   var recordIndexMap = getClientrawExtraRecordIndexMap();
   var recordsTableMap = new Map([
     ['month',document.getElementById('recordsMonthTable')],
@@ -275,19 +335,19 @@ function parseValues(url, request)
   return values;
 }
 
-function updateMinutelyChart(configId, values, startIndex)
+function updateMinutelyChartData(chartDatasetId, values, startIndex)
 {
   if (now == null)
   {
-    console.warn("not updating chart " + configId + " because now is not set");
+    console.warn("not updating chart data " + chartDatasetId + " because now is not set");
     return;
   }
   if (debug)
   {
-    console.debug("updating chart " + configId);
+    console.debug("updating chart data " + chartDatasetId);
   }
-  var chartConfig = getChart(configId).config;
-  chartConfig.data.datasets[0].data = [];
+  var chartDataset = getChartDataset(chartDatasetId);
+  chartDataset.data = [];
   for (var i = startIndex; i < 60 + startIndex; i++) 
   {
     var time = new Date(now);
@@ -295,24 +355,23 @@ function updateMinutelyChart(configId, values, startIndex)
     var datapoint = new Object();
     datapoint.x = time;
     datapoint.y = parseFloat(values[i]);
-    chartConfig.data.datasets[0].data.push(datapoint);
+    chartDataset.data.push(datapoint);
   }
-  getChart(configId).update();
 }
 
-function updateHourlyChart(configId, values, startIndex1, startIndex21)
+function updateHourlyChartData(chartDatasetId, values, startIndex1, startIndex21)
 {
   if (now == null)
   {
-    console.warn("not updating chart " + configId + " because now is not set");
+    console.warn("not updating chart data " + chartDatasetId + " because now is not set");
     return;
   }
   if (debug)
   {
-    console.debug("updating chart " + configId);
+    console.debug("updating chart data " + chartDatasetId);
   }
-  var chartConfig = getChart(configId).config;
-  chartConfig.data.datasets[0].data = [];
+  var chartDataset = getChartDataset(chartDatasetId);
+  chartDataset.data = [];
   for (var i = startIndex1; i < 20 + startIndex1; i++) 
   {
     var time = new Date(now);
@@ -320,7 +379,7 @@ function updateHourlyChart(configId, values, startIndex1, startIndex21)
     var datapoint = new Object();
     datapoint.x = time;
     datapoint.y = parseFloat(values[i]);
-    chartConfig.data.datasets[0].data.push(datapoint);
+    chartDataset.data.push(datapoint);
   }
   for (var i = startIndex21; i < 4 + startIndex21; i++) 
   {
@@ -329,9 +388,8 @@ function updateHourlyChart(configId, values, startIndex1, startIndex21)
     var datapoint = new Object();
     datapoint.x = time;
     datapoint.y = parseFloat(values[i]);
-    chartConfig.data.datasets[0].data.push(datapoint);
+    chartDataset.data.push(datapoint);
   }
-  getChart(configId).update();
 }
 
 function getGaugeOpts()
@@ -500,45 +558,59 @@ function createChartConfig(label, timeUnit, timeStepSize) {
   return config;
 }
 
-function createAndStoreChart(configId, label, timeUnit, timeStepSize, canvasId) {
-  var config = createChartConfig(label, timeUnit, timeStepSize);
+function createAndStoreChartAndConfig(chartDatasetId, label, timeUnit, timeStepSize, canvasId) {
+  var config = createAndStoreChartConfig(chartDatasetId, label, timeUnit, timeStepSize);
+  createAndStoreChart(config, canvasId);
+  if (debug)
+  {
+    console.debug("created chart " + canvasId + " with datasetId " + chartDatasetId);
+  }
+}
+
+function createAndStoreChart(config, canvasId)
+{
   var ctx = document.getElementById(canvasId).getContext('2d'); 
-  setChart(configId, new Chart(ctx, config));
-  if (debug)
-  {
-    console.debug("created chart " + configId);
-  }
+  setChart(canvasId, new Chart(ctx, config));
 }
 
-function createAndStoreChartConfig(configId, label, timeUnit, timeStepSize) {
+function createAndStoreChartConfig(chartDatasetId, label, timeUnit, timeStepSize) {
   var config = createChartConfig(label, timeUnit, timeStepSize);
-  setChartConfig(configId, config);
+  setChartDataset(chartDatasetId, config.data.datasets[0]);
   if (debug)
   {
-    console.debug("created chart config " + configId);
+    console.debug("created chart config and stored dataset " + chartDatasetId);
   }
+  return config;
 }
 
-function getChart(configId)
+function getChart(graphId)
 {
-  return window.livewind[configId];
+  return window.livewind.chart[graphId + 'Canvas'];
 }
 
-function setChart(configId, chart)
-{
-  initLivewindNamespace();
-  window.livewind[configId] = chart;
-}
-
-function setChartConfig(configId, config)
+function setChart(canvasId, chart)
 {
   initLivewindNamespace();
-  if (window.livewind[configId] == null)
+  if (window.livewind.chart == null)
   {
-    window.livewind[configId] = new Object();
-    window.livewind[configId].update = function() {};
+    window.livewind.chart = new Object();
   }
-  window.livewind[configId].config = config;
+  window.livewind.chart[canvasId] = chart;
+}
+
+function getChartDataset(datasetId)
+{
+  return window.livewind.chartdataset[datasetId];
+}
+
+function setChartDataset(datasetId, dataset)
+{
+  initLivewindNamespace();
+  if (window.livewind.chartdataset == null)
+  {
+    window.livewind.chartdataset = new Object();
+  }
+  window.livewind.chartdataset[datasetId] = dataset;
 }
 
 function initLivewindNamespace()
@@ -614,7 +686,7 @@ function getClientrawExtraRecordIndexMap()
       ['maxWindDirection', 'Richtung der höchsten durchschnittlichen Windgeschwindigkeit'],
       ['maxTemp', 'Höchste Temperatur'],
       ['minTemp', 'Tiefste Temperatur'],
-      ['minWindchill', 'Tiefste gefühlte Temeperatur'],
+      ['minWindchill', 'Tiefste gefühlte Temperatur'],
       ['maxAverageTempDay', 'Wärmster Tag (gemittelt über Tageslicht)'],
       ['minAverageTempDay', 'Kältester Tag (gemittelt über Tageslicht)'],
       ['maxAverageTempNight', 'Wärmste Nacht (gemittelt über Dunkelheit)'],
@@ -622,7 +694,7 @@ function getClientrawExtraRecordIndexMap()
       ['minPressure', 'Tiefster Luftdruck'],
       ['maxPressure', 'Höchster Luftdruck'],
       ['maxRainRate', 'höchste Regenrate'],
-      ['maxDailyRain', 'Höchster Tagensniederschlag'],
+      ['maxDailyRain', 'Höchster Tagesniederschlag'],
       ['maxHourlyRain', 'Höchster stündlicher Niederschlag']
     ]),
     'units': new Map([

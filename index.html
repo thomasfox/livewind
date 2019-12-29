@@ -33,16 +33,16 @@
     </div>
     <div id="windSpeedGustsValue" class="lw_gauge_value"></div>
   </div>
-  <div id="windSpeedMinutelyGraphContainer" class="lw_wind_graph_container">
-    <h3 id="windSpeedMinutelyGraphHeadline" class="lw_chart_headline">Wind letzte Stunde [kt]</h3>
-    <div id="windSpeedMinutelyGraph" class="lw_chart_container">
-      <canvas id="windSpeedMinutelyCanvas" class="lw_chart"></canvas>
+  <div id="minutelyTopGraphContainer" class="lw_wind_graph_container">
+    <h3 id="minutelyTopGraphHeadline" class="lw_chart_headline">Wind letzte Stunde [kt]</h3>
+    <div id="minutelyTopGraph" class="lw_chart_container">
+      <canvas id="minutelyTopCanvas" class="lw_chart"></canvas>
     </div>
   </div>
-  <div id="windSpeedHourlyGraphContainer" class="lw_wind_graph_container">
-    <h3 id="windSpeedHourlyGraphHeadline" class="lw_chart_headline">Wind letzten Tag [kt]</h3>
-    <div id="windSpeedHourlyGraph" class="lw_chart_container">
-      <canvas id="windSpeedHourlyCanvas" class="lw_chart"></canvas>
+  <div id="hourlyTopGraphContainer" class="lw_wind_graph_container">
+    <h3 id="hourlyTopGraphHeadline" class="lw_chart_headline">Wind letzten Tag [kt]</h3>
+    <div id="hourlyTopGraph" class="lw_chart_container">
+      <canvas id="hourlyTopCanvas" class="lw_chart"></canvas>
     </div>
   </div>
 </div>
@@ -183,19 +183,26 @@
       data-font-numbers-size="30"
     ></canvas>
   </div>
-  <div id="windDirectionMinutelyGraphContainer" class="lw_wind_graph_container">
-    <h3 id="windDirectionMinutelyGraphHeadline" class="lw_chart_headline">Windrichtung letzte Stunde [°]</h3>
-    <div id="windDirectionMinutelyGraph" class="lw_chart_container">
-      <canvas id="windDirectionMinutelyCanvas" class="lw_chart"></canvas>
+  <div id="minutelyBottomGraphContainer" class="lw_wind_graph_container">
+    <h3 id="minutelyBottomGraphHeadline" class="lw_chart_headline">Windrichtung letzte Stunde [°]</h3>
+    <div id="minutelyBottomGraph" class="lw_chart_container">
+      <canvas id="minutelyBottomCanvas" class="lw_chart"></canvas>
     </div>
-    <div class="lw_horizontal_spacer">&nbsp;</div>
-    <button id="recordsButton" class="lw_records_button">Rekorde</button>
+    <div class="lw_vertical_spacer">&nbsp;</div>
+    <div class="lw_buttons">
+      <select id="graphDisplaySelect" onchange="handleGraphDisplayChange()" class="lw_graph">
+        <option value="wind_speed:wind_direction">Diagramme: Windstärke/richtung</option>
+        <option value="temperature:pressure">Diagramme: Temperatur/Luftdruck</option>
+      </select>
+    </div>
   </div>
-  <div id="windDirectionHourlyGraphContainer" class="lw_wind_graph_container">
-    <h3 id="windDirectionHourlyGraphHeadline" class="lw_chart_headline">Windrichtung letzten Tag [°]</h3>
-    <div id="windDirectionHourlyGraph" class="lw_chart_container">
-      <canvas id="windDirectionHourlyCanvas" class="lw_chart"></canvas>
+  <div id="hourlyBottomGraphContainer" class="lw_wind_graph_container">
+    <h3 id="hourlyBottomGraphHeadline" class="lw_chart_headline">Windrichtung letzten Tag [°]</h3>
+    <div id="hourlyBottomGraph" class="lw_chart_container">
+      <canvas id="hourlyBottomCanvas" class="lw_chart"></canvas>
     </div>
+    <div class="lw_vertical_spacer">&nbsp;</div>
+    <button id="recordsButton" onclick="handleRecordsButtonClick()" class="lw_records">Rekorde</button>
   </div>
   <br/>
   <div id="lastRead" class="lw_lastRead"><span id="readIndicator" class="lw_readIndicator">&#x25CF</span> <span>Daten vom: </span><span id="now"></span></div>
@@ -203,14 +210,14 @@
 <div id="recordsDiv" class="lw_records_modal">
   <div class="lw_recordsContent">
     <span id="recordsClose" class="lw_records_close">&times;</span>
-    <h2 id="recordsMonthHeadline" class="lw_record">Monatsrekorde</h2>
-    <table id="recordsMonthTable" class="lw_record"></table>
-    <h2 id="recordsYearHeadline" style="display: none" class="lw_record">Jahresrekorde</h2>
-    <table id="recordsYearTable" style="display: none" class="lw_record"></table>
-    <h2 id="recordsAllTimeHeadline" style="display: none" class="lw_record">Allzeitrekorde</h2>
-    <table id="recordsAllTimeTable" style="display: none" class="lw_record"></table>
+    <h2 id="recordsMonthHeadline" class="lw_records">Monatsrekorde</h2>
+    <table id="recordsMonthTable" class="lw_records"></table>
+    <h2 id="recordsYearHeadline" style="display: none" class="lw_records">Jahresrekorde</h2>
+    <table id="recordsYearTable" style="display: none" class="lw_records"></table>
+    <h2 id="recordsAllTimeHeadline" style="display: none" class="lw_records">Allzeitrekorde</h2>
+    <table id="recordsAllTimeTable" style="display: none" class="lw_records"></table>
     <hr>
-    <select name="recordSelector" onchange="changeRecordSelector(this.value)" class="lw_recordSelector">
+    <select id="recordSelector" onchange="handleRecordSelectorChange()" class="lw_records">
       <option value="Month">Monatsrekorde</option>
       <option value="Year">Jahresrekorde</option>
       <option value="AllTime">Allzeitrekorde</option>
@@ -231,10 +238,10 @@ var windDirectionGauge;
 var windSpeedGauge;
 var windSpeedGustsGauge;
 
-createAndStoreChart("wind_speedMinutely", 'Windgeschwindigkeit [kt]', 'minute', 10, 'windSpeedMinutelyCanvas');
-createAndStoreChart("wind_directionMinutely", 'Windrichtung [°]', 'minute', 10, 'windDirectionMinutelyCanvas');
-createAndStoreChart("wind_speedHourly", 'Windgeschwindigkeit [kt]', 'hour', 4, 'windSpeedHourlyCanvas');
-createAndStoreChart("wind_directionHourly", 'Windrichtung [°]', 'hour', 4, 'windDirectionHourlyCanvas');
+createAndStoreChartAndConfig("wind_speed_minutely", 'Windgeschwindigkeit [kt]', 'minute', 10, 'minutelyTopCanvas');
+createAndStoreChartAndConfig("wind_direction_minutely", 'Windrichtung [°]', 'minute', 10, 'minutelyBottomCanvas');
+createAndStoreChartAndConfig("wind_speed_hourly", 'Windgeschwindigkeit [kt]', 'hour', 4, 'hourlyTopCanvas');
+createAndStoreChartAndConfig("wind_direction_hourly", 'Windrichtung [°]', 'hour', 4, 'hourlyBottomCanvas');
 createAndStoreChartConfig("temperature_minutely", 'Temperatur [°C]', 'minute', 10);
 createAndStoreChartConfig("humidity_minutely", 'Luftfeuchtigkeit [%]', 'minute', 10);
 createAndStoreChartConfig("pressure_minutely", 'Luftdruck [mBar]', 'minute', 10);
@@ -242,6 +249,7 @@ createAndStoreChartConfig("temperature_hourly", 'Temperatur [°C]', 'hour', 4);
 createAndStoreChartConfig("rain_hourly", 'Regen [mm]', 'hour', 4);
 createAndStoreChartConfig("humidity_hourly", 'Luftfeuchtigkeit [%]', 'hour', 4);
 createAndStoreChartConfig("pressure_hourly", 'Luftdruck [mBar]', 'hour', 4);
+handleGraphDisplayChange();
 repaint();
 
 </script>
