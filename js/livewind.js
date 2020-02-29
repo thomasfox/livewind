@@ -40,7 +40,7 @@ function handleRecordsButtonClick() {
   recordDiv.style.display = "table-cell";
   if (debug)
   {
-    console.debug("handled records button click 123")
+    console.debug("handled records button click")
   }
 }
 
@@ -60,22 +60,22 @@ function handleGraphDisplayChange() {
   }
 }
 
-function changeChartsTo(topEntity, topLabel, topUnit, bottomEntity, bottomLabel, bottomUnit)
+function changeChartsTo(topChartDatasetId, topLabel, topUnit, bottomChartDatasetId, bottomLabel, bottomUnit)
 {
-  changeChartDataTo('minutelyTop', topEntity + '_minutely', topLabel + ' letzte Stunde [' + topUnit + ']');
-  changeChartDataTo('hourlyTop', topEntity + '_hourly', topLabel + ' letzten Tag [' + topUnit +']');
-  changeChartDataTo('minutelyBottom', bottomEntity + '_minutely', bottomLabel + ' letzte Stunde [' + bottomUnit +']');
-  changeChartDataTo('hourlyBottom', bottomEntity + '_hourly', bottomLabel + ' letzten Tag [' + bottomUnit +']');
+  changeChartDataTo('minutelyTop', topChartDatasetId + '_minutely', topLabel + ' letzte Stunde [' + topUnit + ']');
+  changeChartDataTo('hourlyTop', topChartDatasetId + '_hourly', topLabel + ' letzten Tag [' + topUnit +']');
+  changeChartDataTo('minutelyBottom', bottomChartDatasetId + '_minutely', bottomLabel + ' letzte Stunde [' + bottomUnit +']');
+  changeChartDataTo('hourlyBottom', bottomChartDatasetId + '_hourly', bottomLabel + ' letzten Tag [' + bottomUnit +']');
   if (debug)
   {
-    console.debug("changed charts to " + topEntity + " and " + bottomEntity);
+    console.debug("changed charts to " + topChartDatasetId + " and " + bottomChartDatasetId);
   }
 }
 
 function changeChartDataTo(graphId, chartDatasetId, headlineText)
 {
-  var chartDataset = getChartDataset(chartDatasetId);
-  var chart = getChart(graphId)
+  var chartDataset = LivewindStore.getDataset(chartDatasetId);
+  var chart = LivewindStore.getChart(graphId)
   chart.config.data.datasets[0] = chartDataset;
   chart.update();
   var headline = document.getElementById(graphId + 'GraphHeadline');
@@ -241,8 +241,8 @@ function parseClientrawhour(url, request)
   updateMinutelyChartData("temperature_minutely", values, 181);
   updateMinutelyChartData("humidity_minutely", values, 241);
   updateMinutelyChartData("pressure_minutely", values, 301);
-  getChart('minutelyTop').update();
-  getChart('minutelyBottom').update();
+  LivewindStore.getChart('minutelyTop').update();
+  LivewindStore.getChart('minutelyBottom').update();
 
   if (debug)
   {
@@ -263,8 +263,8 @@ function parseClientrawextra(url, request)
   updateHourlyChartData("rain_hourly", values, 41, 570);
   updateHourlyChartData("humidity_hourly", values, 611, 631);
   updateHourlyChartData("pressure_hourly", values, 439, 574);
-  getChart('hourlyTop').update();
-  getChart('hourlyBottom').update();
+  LivewindStore.getChart('hourlyTop').update();
+  LivewindStore.getChart('hourlyBottom').update();
   var recordIndexMap = getClientrawExtraRecordIndexMap();
   var recordsTableMap = new Map([
     ['month',document.getElementById('recordsMonthTable')],
@@ -346,7 +346,7 @@ function updateMinutelyChartData(chartDatasetId, values, startIndex)
   {
     console.debug("updating chart data " + chartDatasetId);
   }
-  var chartDataset = getChartDataset(chartDatasetId);
+  var chartDataset = LivewindStore.getDataset(chartDatasetId);
   chartDataset.data = [];
   for (var i = startIndex; i < 60 + startIndex; i++) 
   {
@@ -370,7 +370,7 @@ function updateHourlyChartData(chartDatasetId, values, startIndex1, startIndex21
   {
     console.debug("updating chart data " + chartDatasetId);
   }
-  var chartDataset = getChartDataset(chartDatasetId);
+  var chartDataset = LivewindStore.getDataset(chartDatasetId);
   chartDataset.data = [];
   for (var i = startIndex1; i < 20 + startIndex1; i++) 
   {
@@ -497,129 +497,6 @@ function getBeaufort(windSpeedInKnots) {
   return 12;
 }
 
-function createChartConfig(label, timeUnit, timeStepSize) {
-  var windGaugesDiv = document.getElementById('windGauges');
-  var windGaugesWidth = windGaugesDiv.getBoundingClientRect().width;
-  var pointRadius = windGaugesWidth/450;
-  var tickFontSize = windGaugesWidth/100;
-  var color = Chart.helpers.color;
-  var config = {
-    type: 'line',
-    data: {
-      datasets: [{
-        label: label,
-        borderColor: 'rgba(111, 173, 207)',
-        backgroundColor: 'rgba(111, 173, 207)',
-        borderWidth: 2,
-        pointRadius: pointRadius,
-        fill: false
-      }]
-    },
-    options: {
-      responsive: true,
-      aspectRatio: 1.3,
-      title: {
-        display: false,
-      },
-      legend: {
-        display: false,
-      },
-      scales: {
-        xAxes: [{
-          type: 'time',
-          display: true,
-          scaleLabel: {
-            display: false
-          },
-          ticks: {
-            fontSize: tickFontSize
-          },
-          time: {
-            unit: timeUnit,
-            stepSize: timeStepSize,
-            displayFormats: {
-              minute: 'hh:mm',
-              hour: 'hh:mm'
-            }
-          }
-        }],
-        yAxes: [{
-          display: true,
-          scaleLabel: {
-            display: false
-          },
-          ticks: {
-            fontSize: 12
-          }
-        }]
-      }
-    }
-  };
-  return config;
-}
-
-function createAndStoreChartAndConfig(chartDatasetId, label, timeUnit, timeStepSize, canvasId) {
-  var config = createAndStoreChartConfig(chartDatasetId, label, timeUnit, timeStepSize);
-  createAndStoreChart(config, canvasId);
-  if (debug)
-  {
-    console.debug("created chart " + canvasId + " with datasetId " + chartDatasetId);
-  }
-}
-
-function createAndStoreChart(config, canvasId)
-{
-  var ctx = document.getElementById(canvasId).getContext('2d'); 
-  setChart(canvasId, new Chart(ctx, config));
-}
-
-function createAndStoreChartConfig(chartDatasetId, label, timeUnit, timeStepSize) {
-  var config = createChartConfig(label, timeUnit, timeStepSize);
-  setChartDataset(chartDatasetId, config.data.datasets[0]);
-  if (debug)
-  {
-    console.debug("created chart config and stored dataset " + chartDatasetId);
-  }
-  return config;
-}
-
-function getChart(graphId)
-{
-  return window.livewind.chart[graphId + 'Canvas'];
-}
-
-function setChart(canvasId, chart)
-{
-  initLivewindNamespace();
-  if (window.livewind.chart == null)
-  {
-    window.livewind.chart = new Object();
-  }
-  window.livewind.chart[canvasId] = chart;
-}
-
-function getChartDataset(datasetId)
-{
-  return window.livewind.chartdataset[datasetId];
-}
-
-function setChartDataset(datasetId, dataset)
-{
-  initLivewindNamespace();
-  if (window.livewind.chartdataset == null)
-  {
-    window.livewind.chartdataset = new Object();
-  }
-  window.livewind.chartdataset[datasetId] = dataset;
-}
-
-function initLivewindNamespace()
-{
-  if (window.livewind == null)
-  {
-    window.livewind = {};
-  }
-}
 
 
 function getClientrawExtraRecordIndexMap()

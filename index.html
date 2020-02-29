@@ -230,6 +230,9 @@
 <script src="js/config.js"></script>
 <script src="js/moment.min.js"></script>
 <script src="js/Chart.min.js"></script>
+<script src="js/livewindHelpers.js"></script>
+<script src="js/livewindStore.js"></script>
+<script src="js/livewindCharts.js"></script>
 <script src="js/livewind.js"></script>
 <script>
 livewind_init();
@@ -238,17 +241,17 @@ var windDirectionGauge;
 var windSpeedGauge;
 var windSpeedGustsGauge;
 
-createAndStoreChartAndConfig("wind_speed_minutely", 'Windgeschwindigkeit [kt]', 'minute', 10, 'minutelyTopCanvas');
-createAndStoreChartAndConfig("wind_direction_minutely", 'Windrichtung [°]', 'minute', 10, 'minutelyBottomCanvas');
-createAndStoreChartAndConfig("wind_speed_hourly", 'Windgeschwindigkeit [kt]', 'hour', 4, 'hourlyTopCanvas');
-createAndStoreChartAndConfig("wind_direction_hourly", 'Windrichtung [°]', 'hour', 4, 'hourlyBottomCanvas');
-createAndStoreChartConfig("temperature_minutely", 'Temperatur [°C]', 'minute', 10);
-createAndStoreChartConfig("humidity_minutely", 'Luftfeuchtigkeit [%]', 'minute', 10);
-createAndStoreChartConfig("pressure_minutely", 'Luftdruck [mBar]', 'minute', 10);
-createAndStoreChartConfig("temperature_hourly", 'Temperatur [°C]', 'hour', 4);
-createAndStoreChartConfig("rain_hourly", 'Regen [mm]', 'hour', 4);
-createAndStoreChartConfig("humidity_hourly", 'Luftfeuchtigkeit [%]', 'hour', 4);
-createAndStoreChartConfig("pressure_hourly", 'Luftdruck [mBar]', 'hour', 4);
+LivewindCharts.createAndStoreChartAndConfig("wind_speed_minutely", 'Windgeschwindigkeit [kt]', 'minute', 10, 'minutelyTop');
+LivewindCharts.createAndStoreChartAndConfig("wind_direction_minutely", 'Windrichtung [°]', 'minute', 10, 'minutelyBottom');
+LivewindCharts.createAndStoreChartAndConfig("wind_speed_hourly", 'Windgeschwindigkeit [kt]', 'hour', 4, 'hourlyTop');
+LivewindCharts.createAndStoreChartAndConfig("wind_direction_hourly", 'Windrichtung [°]', 'hour', 4, 'hourlyBottom');
+LivewindCharts.createAndStoreDataset("temperature_minutely", 'Temperatur [°C]');
+LivewindCharts.createAndStoreDataset("humidity_minutely", 'Luftfeuchtigkeit [%]');
+LivewindCharts.createAndStoreDataset("pressure_minutely", 'Luftdruck [mBar]');
+LivewindCharts.createAndStoreDataset("temperature_hourly", 'Temperatur [°C]');
+LivewindCharts.createAndStoreDataset("rain_hourly", 'Regen [mm]');
+LivewindCharts.createAndStoreDataset("humidity_hourly", 'Luftfeuchtigkeit [%]');
+LivewindCharts.createAndStoreDataset("pressure_hourly", 'Luftdruck [mBar]');
 handleGraphDisplayChange();
 repaint();
 
