@@ -233,6 +233,7 @@
 <script src="js/livewindHelpers.js"></script>
 <script src="js/livewindStore.js"></script>
 <script src="js/livewindCharts.js"></script>
+<script src="js/livewindClientraw.js"></script>
 <script src="js/livewind.js"></script>
 <script>
 livewind_init();
@@ -241,10 +242,10 @@ var windDirectionGauge;
 var windSpeedGauge;
 var windSpeedGustsGauge;
 
-LivewindCharts.createAndStoreChartAndConfig("wind_speed_minutely", 'Windgeschwindigkeit [kt]', 'minute', 10, 'minutelyTop');
-LivewindCharts.createAndStoreChartAndConfig("wind_direction_minutely", 'Windrichtung [°]', 'minute', 10, 'minutelyBottom');
-LivewindCharts.createAndStoreChartAndConfig("wind_speed_hourly", 'Windgeschwindigkeit [kt]', 'hour', 4, 'hourlyTop');
-LivewindCharts.createAndStoreChartAndConfig("wind_direction_hourly", 'Windrichtung [°]', 'hour', 4, 'hourlyBottom');
+LivewindCharts.createAndStoreChartAndDataset("wind_speed_minutely", 'Windgeschwindigkeit [kt]', 'minute', 10, 'minutelyTop');
+LivewindCharts.createAndStoreChartAndDataset("wind_direction_minutely", 'Windrichtung [°]', 'minute', 10, 'minutelyBottom');
+LivewindCharts.createAndStoreChartAndDataset("wind_speed_hourly", 'Windgeschwindigkeit [kt]', 'hour', 4, 'hourlyTop');
+LivewindCharts.createAndStoreChartAndDataset("wind_direction_hourly", 'Windrichtung [°]', 'hour', 4, 'hourlyBottom');
 LivewindCharts.createAndStoreDataset("temperature_minutely", 'Temperatur [°C]');
 LivewindCharts.createAndStoreDataset("humidity_minutely", 'Luftfeuchtigkeit [%]');
 LivewindCharts.createAndStoreDataset("pressure_minutely", 'Luftdruck [mBar]');

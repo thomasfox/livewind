@@ -3,15 +3,35 @@
  */
 class LivewindCharts {
 
-    static createAndStoreChartAndConfig(datasetId, label, timeUnit, timeStepSize, graphId) {
+    /**
+     * Creates a chart which is connected to a newly created dataset.
+     * Both are stored into the LivewindStore.
+     * The chart is then connected to the canvas with id "${chartId}Canvas".
+     * 
+     * @param {String} datasetId the id under which the created dataset is stored into the LivewindStore.
+     * @param {String} label the displayed label of the data set.
+     * @param {String} timeUnit the time unit of the chart.
+     * @param {number} timeStepSize  the time step size of the chart.
+     * @param {String} chartId the id under which the chart is stored into the livewindStore.
+     *                 Also determines the html id of the canvas to be used.
+     */
+    static createAndStoreChartAndDataset(datasetId, label, timeUnit, timeStepSize, chartId) {
         var dataset = LivewindCharts.createAndStoreDataset(datasetId, label);
         var config = LivewindCharts.createChartConfig(timeUnit, timeStepSize, dataset);
-        LivewindCharts.createAndStoreChart(config, graphId);
+        LivewindCharts.createAndStoreChart(config, chartId);
         if (debug) {
-            console.debug("created chart " + graphId + " with datasetId " + datasetId);
+            console.debug("created chart " + chartId + " with datasetId " + datasetId);
         }
     }
 
+    /**
+     * Creates a dataset and stores it into the LivewindStore for later usage.
+     * 
+     * @param {*} datasetId the id under which the created dataset is stored into the LivewindStore.
+     * @param {*} label the displayed label of the data set.
+     * 
+     * @returns the newly created dataset
+     */
     static createAndStoreDataset(datasetId, label) {
         var dataset = this.createDataset(label);
         LivewindStore.storeDataset(datasetId, dataset);
@@ -81,8 +101,8 @@ class LivewindCharts {
         return config;
     }
 
-    static createAndStoreChart(config, graphId) {
-        var ctx = document.getElementById(graphId + 'Canvas').getContext('2d');
-        LivewindStore.storeChart(graphId, new Chart(ctx, config));
+    static createAndStoreChart(config, chartId) {
+        var ctx = document.getElementById(chartId + 'Canvas').getContext('2d');
+        LivewindStore.storeChart(chartId, new Chart(ctx, config));
     }
 }

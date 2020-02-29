@@ -3,16 +3,16 @@
  * Both can be accessed by a String key.
  */
 class LivewindStore {
-    static getChart(graphId) {
-        return window.livewindStore.chart[graphId];
+    static getChart(chartId) {
+        return window.livewindStore.chart[chartId];
     }
 
-    static storeChart(graphId, chart) {
+    static storeChart(chartId, chart) {
         LivewindStore.initLivewindStoreNamespace();
         if (window.livewindStore.chart == null) {
             window.livewindStore.chart = {};
         }
-        window.livewindStore.chart[graphId] = chart;
+        window.livewindStore.chart[chartId] = chart;
     }
 
     static getDataset(datasetId) {
