@@ -44,6 +44,10 @@ function handleRecordsButtonClick() {
   }
 }
 
+/**
+ * Reads the value of the graphDisplaySelect dropdown 
+ * and assigns the appropriate data sets to the charts in the html page.
+ */
 function handleGraphDisplayChange() {
   var graphDisplaySelect = document.getElementById("graphDisplaySelect");
   if (graphDisplaySelect.value == 'wind_speed:wind_direction')
@@ -60,29 +64,50 @@ function handleGraphDisplayChange() {
   }
 }
 
-function changeChartsTo(topChartDatasetId, topLabel, topUnit, bottomChartDatasetId, bottomLabel, bottomUnit)
+/**
+ * Changes the datasets and labels for the charts in the html page to the given data.
+ * 
+ * @param {String} topChartDatasetIdPrefix The prefix for the datasets which should populate the charts in the top of the page.
+ *                 Will be postfixed with '_minutely' and '_hourly' for the left and right chart, respectively.
+ * @param {String} topHeadlinePrefix The prefix for the headline of the charts in the top of the page. 
+ *                 Will be postfixed with 'letzte Stunde' und 'letzten Tag', respectively.
+ * @param {String} topUnit the unit for the label of the charts in the top of the page. 
+ * @param {String} bottomChartDatasetIdPrefix The prefix for the datasets which should populate the charts in the bottom of the page.
+ *                 Will be postfixed with '_minutely' and '_hourly' for the left and right chart, respectively.
+ * @param {String} bottomHeadlinePrefix The prefix for the headline of the charts in the bottom of the page.
+ *                 Will be postfixed with 'letzte Stunde' und 'letzten Tag', respectively.
+ * @param {String} bottomUnit the unit for the label of the charts in the bottom of the page. 
+ */
+function changeChartsTo(topChartDatasetIdPrefix, topHeadlinePrefix, topUnit, bottomChartDatasetIdPrefix, bottomHeadlinePrefix, bottomUnit)
 {
-  changeChartDataTo('minutelyTop', topChartDatasetId + '_minutely', topLabel + ' letzte Stunde [' + topUnit + ']');
-  changeChartDataTo('hourlyTop', topChartDatasetId + '_hourly', topLabel + ' letzten Tag [' + topUnit +']');
-  changeChartDataTo('minutelyBottom', bottomChartDatasetId + '_minutely', bottomLabel + ' letzte Stunde [' + bottomUnit +']');
-  changeChartDataTo('hourlyBottom', bottomChartDatasetId + '_hourly', bottomLabel + ' letzten Tag [' + bottomUnit +']');
+  changeChartDataTo('minutelyTop', topChartDatasetIdPrefix + '_minutely', topHeadlinePrefix + ' letzte Stunde [' + topUnit + ']');
+  changeChartDataTo('hourlyTop', topChartDatasetIdPrefix + '_hourly', topHeadlinePrefix + ' letzten Tag [' + topUnit +']');
+  changeChartDataTo('minutelyBottom', bottomChartDatasetIdPrefix + '_minutely', bottomHeadlinePrefix + ' letzte Stunde [' + bottomUnit +']');
+  changeChartDataTo('hourlyBottom', bottomChartDatasetIdPrefix + '_hourly', bottomHeadlinePrefix + ' letzten Tag [' + bottomUnit +']');
   if (debug)
   {
-    console.debug("changed charts to " + topChartDatasetId + " and " + bottomChartDatasetId);
+    console.debug("changed charts to " + topChartDatasetIdPrefix + " and " + bottomChartDatasetIdPrefix);
   }
 }
 
-function changeChartDataTo(graphId, chartDatasetId, headlineText)
+/**
+ * Changes the datatset and headline text of a chart in the html page.
+ * 
+ * @param {String} chartId the id of the chart to change.
+ * @param {String} chartDatasetId the id of the dataset which should be assigned to the chart.
+ * @param {String} headlineText the new headline text of the chart.
+ */
+function changeChartDataTo(chartId, chartDatasetId, headlineText)
 {
   var chartDataset = LivewindStore.getDataset(chartDatasetId);
-  var chart = LivewindStore.getChart(graphId)
+  var chart = LivewindStore.getChart(chartId)
   chart.config.data.datasets[0] = chartDataset;
   chart.update();
-  var headline = document.getElementById(graphId + 'GraphHeadline');
+  var headline = document.getElementById(chartId + 'GraphHeadline');
   headline.innerHTML = headlineText;
   if (debug)
   {
-    console.debug('changed graph ' + graphId + ' data to ' + chartDatasetId);
+    console.debug('changed graph ' + chartId + ' data to ' + chartDatasetId);
   }
 }
 
@@ -90,21 +115,21 @@ function repaint() {
   var windDirectionCanvas = document.getElementById('windDirectionCanvas');
   windDirectionCanvas.height = windDirectionCanvas.width;
   document.getElementById('windDirectionGauge').height = windDirectionCanvas.width;
-  windDirectionGauge = new Gauge(windDirectionCanvas).setOptions(getDirectionGaugeOpts()); 
+  windDirectionGauge = new Gauge(windDirectionCanvas).setOptions(LivewindGauges.getDirectionGaugeOpts()); 
   windDirectionGauge.maxValue = 360;
   windDirectionGauge.setMinValue(0); 
   windDirectionGauge.animationSpeed = 16; 
 
   var windSpeedCanvas = document.getElementById('windSpeedCanvas');
   windSpeedCanvas.height = windSpeedCanvas.width;
-  windSpeedGauge = new Gauge(windSpeedCanvas).setOptions(getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
+  windSpeedGauge = new Gauge(windSpeedCanvas).setOptions(LivewindGauges.getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
   windSpeedGauge.maxValue = 20;
   windSpeedGauge.setMinValue(0); 
   windSpeedGauge.animationSpeed = 16; 
 
   var windSpeedGustsCanvas = document.getElementById('windSpeedGustsCanvas');
   windSpeedGustsCanvas.height = windSpeedGustsCanvas.width;
-  windSpeedGustsGauge = new Gauge(windSpeedGustsCanvas).setOptions(getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
+  windSpeedGustsGauge = new Gauge(windSpeedGustsCanvas).setOptions(LivewindGauges.getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
   windSpeedGustsGauge.maxValue = 20;
   windSpeedGustsGauge.setMinValue(0); 
   windSpeedGustsGauge.animationSpeed = 16; 
@@ -147,6 +172,10 @@ function handleRecordSelectorChange()
   document.getElementById('records' + value + 'Headline').style.display ='table';
 }
 
+/**
+ * Retrieves the new weather data from the clientraw files 
+ * and displays the new data on the html page. 
+ */
 function updateData()
 {
   if (debug)
@@ -156,57 +185,4 @@ function updateData()
   Clientraw.retrieveAndParse(clientrawUrl, Clientraw.parseClientraw);
   Clientraw.retrieveAndParse(clientrawhourUrl, Clientraw.parseClientrawhour);
   Clientraw.retrieveAndParse(clientrawextraUrl, Clientraw.parseClientrawextra);
-}
-
-function getGaugeOpts()
-{
-  var gaugeOpts = {
-        lineWidth: 0.10,
-        radiusScale: 0.9,
-        pointer: {
-          length: 0.45,
-          strokeWidth: 0.040,
-          color: '#000000'
-        },
-        limitMax: true,
-        limitMin: true,
-        colorStart: '#6FADCF',
-        colorStop: '#6FADCF',
-        strokeColor: '#6FADCF',
-        generateGradient: false,
-        highDpiSupport: true, 
-        renderTicks: {
-          divisions: 8,
-          divWidth: 1.1,
-          divLength: 0.7,
-          divColor: '#333333',
-          subDivisions: 2,
-          subLength: 0.5,
-          subWidth: 0.6,
-          subColor: '#666666'
-        }
-      };
-  return gaugeOpts;
-}
-
-function getDirectionGaugeOpts()
-{
-  var gaugeOpts = getGaugeOpts();
-  gaugeOpts.angle=-0.5;
-  return gaugeOpts;
-}
-
-function getSpeedGaugeOpts(fontSize)
-{
-  var gaugeOpts = getGaugeOpts();
-  gaugeOpts.staticLabels = {
-      font: fontSize + "px sans-serif",
-      labels: [0, 5, 10, 15, 20],
-      color: "#000000",
-      fractionDigits: 0
-  };
-  gaugeOpts.renderTicks.divisions=4;
-  gaugeOpts.renderTicks.subDivisions= 5;
-  gaugeOpts.angle = -0.3;
-  return gaugeOpts;
 }
