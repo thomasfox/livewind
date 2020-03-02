@@ -236,22 +236,14 @@
 <script src="js/livewindGauges.js"></script>
 <script src="js/livewindClientraw.js"></script>
 <script src="js/livewind.js"></script>
+<script src="js/livewindInit.js"></script>
 <script>
-livewind_init();
+LivewindInit.init();
 
-LivewindCharts.createAndStoreChartAndDataset("wind_speed_minutely", 'Windgeschwindigkeit [kt]', 'minute', 10, 'minutelyTop');
-LivewindCharts.createAndStoreChartAndDataset("wind_direction_minutely", 'Windrichtung [°]', 'minute', 10, 'minutelyBottom');
-LivewindCharts.createAndStoreChartAndDataset("wind_speed_hourly", 'Windgeschwindigkeit [kt]', 'hour', 4, 'hourlyTop');
-LivewindCharts.createAndStoreChartAndDataset("wind_direction_hourly", 'Windrichtung [°]', 'hour', 4, 'hourlyBottom');
-LivewindCharts.createAndStoreDataset("temperature_minutely", 'Temperatur [°C]');
-LivewindCharts.createAndStoreDataset("humidity_minutely", 'Luftfeuchtigkeit [%]');
-LivewindCharts.createAndStoreDataset("pressure_minutely", 'Luftdruck [mBar]');
-LivewindCharts.createAndStoreDataset("temperature_hourly", 'Temperatur [°C]');
-LivewindCharts.createAndStoreDataset("rain_hourly", 'Regen [mm]');
-LivewindCharts.createAndStoreDataset("humidity_hourly", 'Luftfeuchtigkeit [%]');
-LivewindCharts.createAndStoreDataset("pressure_hourly", 'Luftdruck [mBar]');
 handleGraphDisplayChange();
-repaint();
+updateData();
+setInterval(function () { updateData(); }, 5000);
+
 
 </script>
 </body>

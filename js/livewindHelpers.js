@@ -1,9 +1,11 @@
 class LivewindHelpers {
 
     static getContentWidth() {
-        var windGaugesDiv = document.getElementById('windGauges');
-        var windGaugesWidth = windGaugesDiv.getBoundingClientRect().width;
-        return windGaugesWidth;
+        var bodyWidth = document.body.clientWidth;
+        if (bodyWidth > 1600) {
+          bodyWidth = 1600;
+        }
+        return bodyWidth;
     }
 
     static getBeaufort(windSpeedInKnots) {

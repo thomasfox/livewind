@@ -1,39 +1,7 @@
-function livewind_init()
-{
-  document.getElementById('headline').innerHTML = headline;
-  var bodyWidth = document.body.clientWidth;
-  if (bodyWidth > 1600) {
-    bodyWidth = 1600;
-  }
-  var bodyFontSize = bodyWidth / 100;
-  document.body.style.fontSize = bodyFontSize + "px";
-  var windGauges = document.getElementById('windGauges');
-  windGauges.style.height = (windGauges.clientWidth * 0.17) + "px";
-  var temperatures = document.getElementById('temperatures');
-  temperatures.style.height = (windGauges.clientWidth * 0.19) + "px";
-  
-  var recordDiv = document.getElementById("recordsDiv");
-  var recordsClose = document.getElementById("recordsClose");
 
-  recordsClose.onclick = function() {
-    recordDiv.style.display = "none";
-    if (debug)
-    {
-      console.debug("handled recordsClose button click")
-    }
-  }
-
-  window.onclick = function(event) {
-    if (event.target == recordDiv) {
-      recordDiv.style.display = "none";
-      if (debug)
-      {
-        console.debug("handled recordsClose click")
-      }
-    }
-  }
-}
-
+/**
+ * Displays the overlay div containing the records.
+ */
 function handleRecordsButtonClick() {
   handleRecordSelectorChange();
   var recordDiv = document.getElementById("recordsDiv");
@@ -109,57 +77,6 @@ function changeChartDataTo(chartId, chartDatasetId, headlineText)
   {
     console.debug('changed graph ' + chartId + ' data to ' + chartDatasetId);
   }
-}
-
-function repaint() {
-  var windDirectionCanvas = document.getElementById('windDirectionCanvas');
-  windDirectionCanvas.height = windDirectionCanvas.width;
-  document.getElementById('windDirectionGauge').height = windDirectionCanvas.width;
-  var windDirectionGauge = new Gauge(windDirectionCanvas).setOptions(LivewindGauges.getDirectionGaugeOpts());
-  LivewindStore.storeGauge('windDirection', windDirectionGauge);
-  windDirectionGauge.maxValue = 360;
-  windDirectionGauge.setMinValue(0); 
-  windDirectionGauge.animationSpeed = 16; 
-
-  var windSpeedCanvas = document.getElementById('windSpeedCanvas');
-  windSpeedCanvas.height = windSpeedCanvas.width;
-  var windSpeedGauge = new Gauge(windSpeedCanvas).setOptions(LivewindGauges.getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
-  LivewindStore.storeGauge('windSpeed', windSpeedGauge);
-  windSpeedGauge.maxValue = 20;
-  windSpeedGauge.setMinValue(0); 
-  windSpeedGauge.animationSpeed = 16; 
-
-  var windSpeedGustsCanvas = document.getElementById('windSpeedGustsCanvas');
-  windSpeedGustsCanvas.height = windSpeedGustsCanvas.width;
-  var windSpeedGustsGauge = new Gauge(windSpeedGustsCanvas).setOptions(LivewindGauges.getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
-  LivewindStore.storeGauge('windSpeedGusts', windSpeedGustsGauge);
-  windSpeedGustsGauge.maxValue = 20;
-  windSpeedGustsGauge.setMinValue(0); 
-  windSpeedGustsGauge.animationSpeed = 16; 
-
-  var temperaturesDiv = document.getElementById('temperatures');
-  var temperaturesDivWidth=temperaturesDiv.getBoundingClientRect().width;
-  var temperatureCanvasWidth = temperaturesDivWidth * 0.08;
-  var temperatureCanvasHeight = temperaturesDivWidth * 0.20;
-
-  var airTemperatureCanvas = document.getElementById('airTemperatureCanvas');
-  airTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)
-  airTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight)
-  
-  var windchillTemperatureCanvas = document.getElementById('windchillTemperatureCanvas');
-  windchillTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)
-  windchillTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight)
-
-  var waterTemperatureCanvas = document.getElementById('waterTemperatureCanvas');
-  waterTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth)
-  waterTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight)
-
-  var dailyRainCanvas = document.getElementById('dailyRainCanvas');
-  dailyRainCanvas.setAttribute('data-width', temperatureCanvasWidth)
-  dailyRainCanvas.setAttribute('data-height', temperatureCanvasHeight)
-
-  updateData();
-  setInterval(function(){ updateData(); }, 5000);
 }
 
 function handleRecordSelectorChange()
