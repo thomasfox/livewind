@@ -1,6 +1,6 @@
 /**
- * Stores charts (regions in html which can display datasets) and chart datasets.
- * Both can be accessed by a String key.
+ * Stores charts (regions in html which can display datasets), chart datasets and gauges.
+ * They can be accessed by a String key.
  */
 class LivewindStore {
     static getChart(chartId) {
@@ -25,6 +25,18 @@ class LivewindStore {
             window.livewindStore.dataset = {};
         }
         window.livewindStore.dataset[datasetId] = dataset;
+    }
+
+    static getGauge(gaugeId) {
+        return window.livewindStore.gauge[gaugeId];
+    }
+
+    static storeGauge(gaugeId, gauge) {
+        LivewindStore.initLivewindStoreNamespace();
+        if (window.livewindStore.gauge == null) {
+            window.livewindStore.gauge = {};
+        }
+        window.livewindStore.gauge[gaugeId] = gauge;
     }
 
     static initLivewindStoreNamespace() {

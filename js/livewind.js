@@ -115,21 +115,24 @@ function repaint() {
   var windDirectionCanvas = document.getElementById('windDirectionCanvas');
   windDirectionCanvas.height = windDirectionCanvas.width;
   document.getElementById('windDirectionGauge').height = windDirectionCanvas.width;
-  windDirectionGauge = new Gauge(windDirectionCanvas).setOptions(LivewindGauges.getDirectionGaugeOpts()); 
+  var windDirectionGauge = new Gauge(windDirectionCanvas).setOptions(LivewindGauges.getDirectionGaugeOpts());
+  LivewindStore.storeGauge('windDirection', windDirectionGauge);
   windDirectionGauge.maxValue = 360;
   windDirectionGauge.setMinValue(0); 
   windDirectionGauge.animationSpeed = 16; 
 
   var windSpeedCanvas = document.getElementById('windSpeedCanvas');
   windSpeedCanvas.height = windSpeedCanvas.width;
-  windSpeedGauge = new Gauge(windSpeedCanvas).setOptions(LivewindGauges.getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
+  var windSpeedGauge = new Gauge(windSpeedCanvas).setOptions(LivewindGauges.getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
+  LivewindStore.storeGauge('windSpeed', windSpeedGauge);
   windSpeedGauge.maxValue = 20;
   windSpeedGauge.setMinValue(0); 
   windSpeedGauge.animationSpeed = 16; 
 
   var windSpeedGustsCanvas = document.getElementById('windSpeedGustsCanvas');
   windSpeedGustsCanvas.height = windSpeedGustsCanvas.width;
-  windSpeedGustsGauge = new Gauge(windSpeedGustsCanvas).setOptions(LivewindGauges.getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
+  var windSpeedGustsGauge = new Gauge(windSpeedGustsCanvas).setOptions(LivewindGauges.getSpeedGaugeOpts(windDirectionCanvas.width/15)); 
+  LivewindStore.storeGauge('windSpeedGusts', windSpeedGustsGauge);
   windSpeedGustsGauge.maxValue = 20;
   windSpeedGustsGauge.setMinValue(0); 
   windSpeedGustsGauge.animationSpeed = 16; 
