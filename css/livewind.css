@@ -3,7 +3,7 @@ body {
     background-color: #E7F3FF;
 }
 
-.lw_wind_gauges, .lw_temperatures {
+.lw_wind_gauges, .lw_temperature_gauges {
     width:100%;
     max-width: 1600px;
     margin-top: 2%;
@@ -16,7 +16,7 @@ h1 {
     margin: 0.5%;
 }
 
-.lw_gauge_container {
+.lw_wind_gauge_container {
     width:12%;
     height:96%;
     margin:0 1% 0 1%;
@@ -33,12 +33,12 @@ h1 {
     margin-bottom: 10%;
 }
 
-div.lw_gauge {
+div.lw_wind_gauge {
     position: relative;
     height: 76%;
 }
 
-canvas.lw_gauge {
+canvas.lw_wind_gauge {
     width : 100%;
     position: absolute;
 }
@@ -71,16 +71,10 @@ canvas.lw_chart {
     margin-bottom: 2%;
 }
 
-.lw_temperature,.lw_rain {
-    width: 9%;
+.lw_temperature_gauge_container,.lw_rain_gauge_container {
+    width: 9.2%;
+    height: 96%;
     margin: 0 0.5% 0 0.5%;
-    display: inline-block; 
-    vertical-align: top;
-}
-
-.lw_temperature_small,.lw_rain_small {
-    width: 7%;
-    margin: 0 2% 0 1.5%;
     display: inline-block; 
     vertical-align: top;
 }
@@ -95,14 +89,24 @@ canvas.lw_chart {
     text-align: center;
 }
 
-.lw_temperature_gauge, .lw_rain_gauge {
-    width: 12.5%;
-    margin-left: 10%;
-    height: 30%;
+.lw_temperature_headline_small, .lw_rain_headline_small {
+  font-size: 100%;
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 5%;
+  margin-top: 0;
+  margin-bottom: 2%;
+  text-align: center;
 }
 
-.lw_temperature_gauge_small, .lw_rain_gauge_small {
+div.lw_temperature_gauge, div.lw_rain_gauge {
+  position: relative;
+  height: 88%;
+}
+
+canvas.lw_temperature_gauge, canvas.lw_rain_gauge {
     width: 12.5%;
+    margin-left: 10%;
     height: 30%;
 }
 
@@ -110,12 +114,20 @@ canvas.lw_chart {
     position: relative; 
 }
 
-.lw_wind_graph_container {
+.lw_top_graph_container {
     width: 22%;
     height: 96%;
     margin: 0 2% 0 2%;
     display: inline-block; 
     vertical-align: top;
+}
+
+.lw_bottom_graph_container {
+  width: 22%;
+  height: 80%;
+  margin: 0 2% 0 2%;
+  display: inline-block; 
+  vertical-align: top;
 }
 
 .lw_lastRead {

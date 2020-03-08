@@ -19,26 +19,7 @@ class LivewindInit {
         var windGauges = document.getElementById('windGauges');
         windGauges.style.height = (contentWidth * 0.17) + "px";
         var temperatures = document.getElementById('temperatures');
-        temperatures.style.height = (contentWidth * 0.19) + "px";
-        LivewindInit.initTemperatureGaugesDimensions();
-    }
-
-    static initTemperatureGaugesDimensions() {
-        var contentWidth = LivewindHelpers.getContentWidth();
-        var temperatureCanvasWidth = contentWidth * 0.08;
-        var temperatureCanvasHeight = contentWidth * 0.20;
-        var airTemperatureCanvas = document.getElementById('airTemperatureCanvas');
-        airTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth);
-        airTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight);
-        var windchillTemperatureCanvas = document.getElementById('windchillTemperatureCanvas');
-        windchillTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth);
-        windchillTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight);
-        var waterTemperatureCanvas = document.getElementById('waterTemperatureCanvas');
-        waterTemperatureCanvas.setAttribute('data-width', temperatureCanvasWidth);
-        waterTemperatureCanvas.setAttribute('data-height', temperatureCanvasHeight);
-        var dailyRainCanvas = document.getElementById('dailyRainCanvas');
-        dailyRainCanvas.setAttribute('data-width', temperatureCanvasWidth);
-        dailyRainCanvas.setAttribute('data-height', temperatureCanvasHeight);
+        temperatures.style.height = (contentWidth * 0.24) + "px";
     }
 
     /**
@@ -74,6 +55,10 @@ class LivewindInit {
         LivewindGauges.createWindDirectionGauge();
         LivewindGauges.createWindSpeedGauge();
         LivewindGauges.createWindSpeedGustsGauge();
+        LivewindGauges.createAirTemperatureGauge();
+        LivewindGauges.createWindchillTemperatureGauge();
+        LivewindGauges.createWaterTemperatureGauge();
+        LivewindGauges.createDailyRainGauge();
     }
 
     static createChartsAndDatasets() {

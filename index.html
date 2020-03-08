@@ -8,178 +8,66 @@
 <body onresize="LivewindInit.init()">
 <h1 id="headline">Livewind Data</h1>
 <div id="windGauges" class="lw_wind_gauges">
-  <div id="windDirection" class="lw_gauge_container">
+  <div id="windDirection" class="lw_wind_gauge_container">
     <h3 id="windDirectionHeadline" class="lw_gauge_headline">Windrichtung</h3>
-    <div id="windDirectionGauge" class="lw_gauge">
-      <canvas id="windDirectionCanvas" class="lw_gauge"></canvas>
+    <div id="windDirectionGauge" class="lw_wind_gauge">
+      <canvas id="windDirectionCanvas" class="lw_wind_gauge"></canvas>
     </div>
     <div id="windDirectionValue" class="lw_gauge_value"></div>
   </div>
-  <div id="windSpeed" class="lw_gauge_container">
+  <div id="windSpeed" class="lw_wind_gauge_container">
     <h3 id="windSpeedHeaDline" class="lw_gauge_headline">Windgeschwindigkeit</h3>
-    <div id="windSpeedGauge" class="lw_gauge">
-      <canvas id="windSpeedCanvas" class="lw_gauge"></canvas>
+    <div id="windSpeedGauge" class="lw_wind_gauge">
+      <canvas id="windSpeedCanvas" class="lw_wind_gauge"></canvas>
     </div>
     <div id="windSpeedValue" class="lw_gauge_value"></div>
   </div>
-  <div id="windSpeedGusts" class="lw_gauge_container">
+  <div id="windSpeedGusts" class="lw_wind_gauge_container">
     <h3 id="windSpeedGustsHeadline" class="lw_gauge_headline">Windböen</h3>
-    <div id="windSpeedGustsGauge" class="lw_gauge">
-      <canvas id="windSpeedGustsCanvas" class="lw_gauge"></canvas>
+    <div id="windSpeedGustsGauge" class="lw_wind_gauge">
+      <canvas id="windSpeedGustsCanvas" class="lw_wind_gauge"></canvas>
     </div>
     <div id="windSpeedGustsValue" class="lw_gauge_value"></div>
   </div>
-  <div id="minutelyTopGraphContainer" class="lw_wind_graph_container">
+  <div id="minutelyTopGraphContainer" class="lw_top_graph_container">
     <h3 id="minutelyTopGraphHeadline" class="lw_chart_headline">Wind letzte Stunde [kt]</h3>
     <div id="minutelyTopGraph" class="lw_chart_container">
       <canvas id="minutelyTopCanvas" class="lw_chart"></canvas>
     </div>
   </div>
-  <div id="hourlyTopGraphContainer" class="lw_wind_graph_container">
+  <div id="hourlyTopGraphContainer" class="lw_top_graph_container">
     <h3 id="hourlyTopGraphHeadline" class="lw_chart_headline">Wind letzten Tag [kt]</h3>
     <div id="hourlyTopGraph" class="lw_chart_container">
       <canvas id="hourlyTopCanvas" class="lw_chart"></canvas>
     </div>
   </div>
 </div>
-<div id="temperatures" class="lw_temperatures">
-  <div id="airTemperature" class="lw_temperature_small">
-    <h3 id="airTemperatureHeadline" class="lw_temperature_headline">Temperatur Luft</h3>
-    <canvas id="airTemperatureCanvas" class="lw_temperature_gauge_small" data-type="linear-gauge"
-      data-height="400"
-      data-min-value="-10"
-      data-max-value="40"
-      data-major-ticks="-10,0,10,20,30,40"
-      data-minor-ticks="10"
-      data-borders="false"
-      data-bar-begin-circle="20"
-      data-highlights="false"
-      data-border-shadow-width="0"
-      data-tick-side="left"
-      data-number-side="left"
-      data-needle-side="left"
-      data-needle-type="line"
-      data-needle-width="3"
-      data-color-needle="#222"
-      data-color-needle-end="#222"
-      data-color-plate="#E7F3FF"
-      data-animation-duration="1500"
-      data-bar-width="8"
-      data-ticks-width="30"
-      data-ticks-width-minor="10"
-      data-color-bar-progress="#6FADCF"
-      data-color-value-box-shadow="false"
-      data-value-box-stroke="0"
-      data-color-value-box-background="false"
-      data-value-int="1"
-      data-value-dec="1"
-      data-font-value-size="25"
-      data-font-numbers-size="30"
-    ></canvas>
+<div id="temperatures" class="lw_temperature_gauges">
+  <div id="airTemperature" class="lw_temperature_gauge_container">
+    <h3 id="airTemperatureHeadline" class="lw_temperature_headline_small">Temperatur Luft</h3>
+    <div id="airTemperatureGauge" class="lw_temperature_gauge">
+      <canvas id="airTemperatureCanvas" class="lw_temperature_gauge"></canvas>
+    </div>
   </div>
-  <div id="windchillTemperature" class="lw_temperature">
-    <h3 id="windchillTemperatureHeadline" class="lw_temperature_headline">Temperatur gefühlt</h3>
-    <canvas id="windchillTemperatureCanvas" class="lw_temperature_gauge" data-type="linear-gauge"
-      data-height="400"
-      data-min-value="-10"
-      data-max-value="40"
-      data-major-ticks="-10,0,10,20,30,40"
-      data-minor-ticks="10"
-      data-borders="false"
-      data-bar-begin-circle="20"
-      data-highlights="false"
-      data-border-shadow-width="0"
-      data-tick-side="left"
-      data-number-side="left"
-      data-needle-side="left"
-      data-needle-type="line"
-      data-needle-width="3"
-      data-color-needle="#222"
-      data-color-needle-end="#222"
-      data-color-plate="#E7F3FF"
-      data-animation-duration="1500"
-      data-bar-width="8"
-      data-ticks-width="30"
-      data-ticks-width-minor="10"
-      data-color-bar-progress="#6FADCF"
-      data-color-value-box-shadow="false"
-      data-value-box-stroke="0"
-      data-color-value-box-background="false"
-      data-value-int="1"
-      data-value-dec="1"
-      data-font-value-size="25"
-      data-font-numbers-size="30"
-    ></canvas>
+  <div id="windchillTemperature" class="lw_temperature_gauge_container">
+    <h3 id="windchillTemperatureHeadline" class="lw_temperature_headline_small">Temperatur gefühlt</h3>
+    <div id="windchillTemperatureGauge" class="lw_temperature_gauge">
+      <canvas id="windchillTemperatureCanvas" class="lw_temperature_gauge"></canvas>
+    </div>
   </div>
-  <div id="waterTemperature" class="lw_temperature_small">
-    <h3 id="waterTemperatureHeadline" class="lw_temperature_headline">Temperatur Wasser</h3>
-    <canvas id="waterTemperatureCanvas" class="lw_temperature_gauge_small" data-type="linear-gauge"
-      data-height="400"
-      data-min-value="-10"
-      data-max-value="40"
-      data-major-ticks="-10,0,10,20,30,40"
-      data-minor-ticks="10"
-      data-borders="false"
-      data-bar-begin-circle="20"
-      data-highlights="false"
-      data-border-shadow-width="0"
-      data-tick-side="left"
-      data-number-side="left"
-      data-needle-side="left"
-      data-needle-type="line"
-      data-needle-width="3"
-      data-color-needle="#222"
-      data-color-needle-end="#222"
-      data-color-plate="#E7F3FF"
-      data-animation-duration="1500"
-      data-bar-width="8"
-      data-ticks-width="30"
-      data-ticks-width-minor="10"
-      data-color-bar-progress="#6FADCF"
-      data-color-value-box-shadow="false"
-      data-value-box-stroke="0"
-      data-color-value-box-background="false"
-      data-value-int="1"
-      data-value-dec="1"
-      data-font-value-size="25"
-      data-font-numbers-size="30"
-    ></canvas>
+  <div id="waterTemperature" class="lw_temperature_gauge_container">
+    <h3 id="waterTemperatureHeadline" class="lw_temperature_headline_small">Temperatur Wasser</h3>
+    <div id="waterTemperatureGauge" class="lw_temperature_gauge">
+      <canvas id="waterTemperatureCanvas" class="lw_temperature_gauge"></canvas>
+    </div>
   </div>
-  <div id="dailyRain" class="lw_rain_small">
-    <h3 id="dailyRainHeadline" class="lw_rain_headline">Regenmenge Tag</h3>
-    <canvas id="dailyRainCanvas" class="lw_rain_gauge_small" data-type="linear-gauge"
-      data-height="370"
-      data-min-value="0"
-      data-max-value="20"
-      data-major-ticks="0,5,10,15,20"
-      data-minor-ticks="10"
-      data-borders="false"
-      data-bar-begin-circle="0"
-      data-highlights="false"
-      data-border-shadow-width="0"
-      data-tick-side="left"
-      data-number-side="left"
-      data-needle-side="left"
-      data-needle-type="line"
-      data-needle-width="3"
-      data-color-needle="#222"
-      data-color-needle-end="#222"
-      data-color-plate="#E7F3FF"
-      data-animation-duration="1500"
-      data-bar-width="8"
-      data-ticks-width="30"
-      data-ticks-width-minor="10"
-      data-color-bar-progress="#6FADCF"
-      data-color-value-box-shadow="false"
-      data-value-box-stroke="0"
-      data-color-value-box-background="false"
-      data-value-int="1"
-      data-value-dec="1"
-      data-font-value-size="25"
-      data-font-numbers-size="30"
-    ></canvas>
+  <div id="dailyRain" class="lw_rain_gauge_container">
+    <h3 id="dailyRainHeadline" class="lw_rain_headline_small">Regenmenge Tag</h3>
+    <div id="dailyRainGauge" class="lw_rain_gauge">
+      <canvas id="dailyRainCanvas" class="lw_rain_gauge"></canvas>
+    </div>
   </div>
-  <div id="minutelyBottomGraphContainer" class="lw_wind_graph_container">
+  <div id="minutelyBottomGraphContainer" class="lw_bottom_graph_container">
     <h3 id="minutelyBottomGraphHeadline" class="lw_chart_headline">Windrichtung letzte Stunde [°]</h3>
     <div id="minutelyBottomGraph" class="lw_chart_container">
       <canvas id="minutelyBottomCanvas" class="lw_chart"></canvas>
@@ -192,7 +80,7 @@
       </select>
     </div>
   </div>
-  <div id="hourlyBottomGraphContainer" class="lw_wind_graph_container">
+  <div id="hourlyBottomGraphContainer" class="lw_bottom_graph_container">
     <h3 id="hourlyBottomGraphHeadline" class="lw_chart_headline">Windrichtung letzten Tag [°]</h3>
     <div id="hourlyBottomGraph" class="lw_chart_container">
       <canvas id="hourlyBottomCanvas" class="lw_chart"></canvas>

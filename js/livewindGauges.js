@@ -30,6 +30,42 @@ class LivewindGauges {
         gauge.draw();
     }
 
+    /**
+     * Creates and stores the gauge for the air temperature.
+     */
+    static createAirTemperatureGauge() {
+        var gauge = new LinearGauge(this.createTemperatureGaugeOpts('airTemperatureCanvas'));
+        LivewindStore.storeGauge('airTemperature', gauge);
+        gauge.draw();
+    }
+
+    /**
+     * Creates and stores the gauge for the windchill temperature.
+     */
+    static createWindchillTemperatureGauge() {
+        var gauge = new LinearGauge(this.createTemperatureGaugeOpts('windchillTemperatureCanvas'));
+        LivewindStore.storeGauge('windchillTemperature', gauge);
+        gauge.draw();
+    }
+
+    /**
+     * Creates and stores the gauge for the water temperature.
+     */
+    static createWaterTemperatureGauge() {
+        var gauge = new LinearGauge(this.createTemperatureGaugeOpts('waterTemperatureCanvas'));
+        LivewindStore.storeGauge('waterTemperature', gauge);
+        gauge.draw();
+    }
+
+    /**
+     * Creates and stores the gauge for the daily daily rain.
+     */
+    static createDailyRainGauge() {
+        var gauge = new LinearGauge(this.createRainGaugeOpts('dailyRainCanvas'));
+        LivewindStore.storeGauge('dailyRain', gauge);
+        gauge.draw();
+    }
+
     static createWindDirectionOptions(canvasId) {
         var directionOptions = {
             renderTo: canvasId,
@@ -73,6 +109,61 @@ class LivewindGauges {
             valueBox: false,
             borders: false
         }
+        return basicOptions;
+    }
+
+    static createRainGaugeOpts(canvasId) {
+        var rainOptions = {
+            minValue: 0,
+            maxValue: 20,
+            majorTicks: ["0", "5", "10", "15", "20"],
+            minorTicks: 5,
+            barBeginCircle: 0
+        };
+        Object.assign(rainOptions, this.createTemperatureRainBasicGaugeOpts(canvasId));
+        return rainOptions;
+    }
+
+    static createTemperatureGaugeOpts(canvasId) {
+        var temperatureOptions = {
+            minValue: -10,
+            maxValue: 40,
+            majorTicks: ["-10", "0", "10", "20", "30", "40"],
+            minorTicks: 10,
+            barBeginCircle: 20
+        };
+        Object.assign(temperatureOptions, this.createTemperatureRainBasicGaugeOpts(canvasId));
+        return temperatureOptions;
+    }
+
+
+    static createTemperatureRainBasicGaugeOpts(canvasId) {
+        var basicOptions = {
+            renderTo: canvasId,
+            borders: false,
+            highlights: false,
+            borderShadowWidth: 0,
+            tickSide: "left",
+            numberSide: "left",
+            needleSide: "left",
+            needleType: "line",
+            needleWidth: 3,
+            colorNeedle: "#222",
+            colorNeedleEnd: "#222",
+            colorPlate: "#E7F3FF",
+            animationDuration: 1500,
+            barWidth: 8,
+            ticksWidth: 25,
+            ticksWidthMinor: 10,
+            colorBarProgress: "#6FADCF",
+            colorValueBoxShadow: false,
+            valueBoxStroke: 0,
+            colorValueBoxBackground: false,
+            valueInt: 1,
+            valueDec: 1,
+            fontValueSize: 22,
+            fontNumbersSize: 25
+        };
         return basicOptions;
     }
 }

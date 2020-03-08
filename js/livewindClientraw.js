@@ -35,21 +35,21 @@ class Clientraw {
         LivewindStore.getGauge('windDirection').value = windDirection;
         document.getElementById("windDirectionValue").innerHTML = windDirection + ' °';
 
-        var airTemperature = values[4]
-        document.getElementById("airTemperatureCanvas").setAttribute('data-value', airTemperature);
-        document.getElementById("airTemperatureCanvas").setAttribute('data-value-text', airTemperature + " °C");
+        var airTemperature = values[4];
+        LivewindStore.getGauge('airTemperature').value = airTemperature;
+        LivewindStore.getGauge('airTemperature').update({ valueText: airTemperature + " °C" });
 
-        var windchillTemperature = values[44]
-        document.getElementById("windchillTemperatureCanvas").setAttribute('data-value', windchillTemperature);
-        document.getElementById("windchillTemperatureCanvas").setAttribute('data-value-text', windchillTemperature + " °C");
+        var windchillTemperature = values[44];
+        LivewindStore.getGauge('windchillTemperature').value = windchillTemperature;
+        LivewindStore.getGauge('windchillTemperature').update({ valueText: windchillTemperature + " °C" });
 
-        var waterTemperature = values[20]
-        document.getElementById("waterTemperatureCanvas").setAttribute('data-value', waterTemperature);
-        document.getElementById("waterTemperatureCanvas").setAttribute('data-value-text', waterTemperature + " °C");
+        var waterTemperature = values[20];
+        LivewindStore.getGauge('waterTemperature').value = waterTemperature;
+        LivewindStore.getGauge('waterTemperature').update({ valueText: waterTemperature + " °C" });
 
-        var dailyRain = values[7]
-        document.getElementById("dailyRainCanvas").setAttribute('data-value', dailyRain);
-        document.getElementById("dailyRainCanvas").setAttribute('data-value-text', dailyRain + " mm");
+        var dailyRain = values[7];
+        LivewindStore.getGauge('dailyRain').value = dailyRain;
+        LivewindStore.getGauge('dailyRain').update({ valueText: dailyRain + " mm" });
 
         var hour = values[29];
         var minute = values[30];
