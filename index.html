@@ -5,17 +5,13 @@
 <meta charset="UTF-8"> 
 <link rel="stylesheet" href="css/livewind.css" />
 </head>
-<body>
+<body onresize="LivewindInit.init()">
 <h1 id="headline">Livewind Data</h1>
 <div id="windGauges" class="lw_wind_gauges">
   <div id="windDirection" class="lw_gauge_container">
     <h3 id="windDirectionHeadline" class="lw_gauge_headline">Windrichtung</h3>
     <div id="windDirectionGauge" class="lw_gauge">
       <canvas id="windDirectionCanvas" class="lw_gauge"></canvas>
-      <div id="windDirectionNorth" class="lw_winddirection_gauge_label lw_winddirection_gauge_label_north">N</div>
-       <div id="windDirectionSouth" class="lw_winddirection_gauge_label lw_winddirection_gauge_label_south">S</div>
-      <div id="windDirectionEast" class="lw_winddirection_gauge_label lw_winddirection_gauge_label_east">O</div>
-      <div id="windDirectionWest" class="lw_winddirection_gauge_label lw_winddirection_gauge_label_west">W</div>
     </div>
     <div id="windDirectionValue" class="lw_gauge_value"></div>
   </div>
@@ -225,8 +221,7 @@
   </div>
 </div>
 <script src="js/polyfill.js"></script>
-<script src="js/gauge.min.js"></script>
-<script src="js/canvas-gauge-linear.min.js"></script>
+<script src="js/canvas-gauge.min.js"></script>
 <script src="js/config.js"></script>
 <script src="js/moment.min.js"></script>
 <script src="js/Chart.min.js"></script>

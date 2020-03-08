@@ -71,33 +71,6 @@ canvas.lw_chart {
     margin-bottom: 2%;
 }
 
-.lw_winddirection_gauge_label {
-    font-size: 90%;
-    position: absolute;
-    text-align: center;
-}
-
-.lw_winddirection_gauge_label_north {
-    width: 100%;
-    top: 0%;
-}
-
-.lw_winddirection_gauge_label_south {
-    width: 100%;
-    top: 84%;
-}
-
-.lw_winddirection_gauge_label_east {
-    width: 10%;
-    top: 41%;
-    left: 90%;
-}
-
-.lw_winddirection_gauge_label_west {
-    width: 10%;
-    top: 41%;
-}
-
 .lw_temperature,.lw_rain {
     width: 9%;
     margin: 0 0.5% 0 0.5%;

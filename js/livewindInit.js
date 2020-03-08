@@ -71,9 +71,9 @@ class LivewindInit {
     }
 
     static createGauges() {
-        LivewindInit.createWindDirectionGauge();
-        LivewindInit.createWindSpeedGauge();
-        LivewindInit.createWindSpeedGustsGauge();
+        LivewindGauges.createWindDirectionGauge();
+        LivewindGauges.createWindSpeedGauge();
+        LivewindGauges.createWindSpeedGustsGauge();
     }
 
     static createChartsAndDatasets() {
@@ -88,45 +88,5 @@ class LivewindInit {
         LivewindCharts.createAndStoreDataset("rain_hourly", 'Regen [mm]');
         LivewindCharts.createAndStoreDataset("humidity_hourly", 'Luftfeuchtigkeit [%]');
         LivewindCharts.createAndStoreDataset("pressure_hourly", 'Luftdruck [mBar]');
-    }
-
-    /**
-     * Creates and stores the gauge for the wind direction.
-     */
-    static createWindDirectionGauge() {
-        var windDirectionCanvas = document.getElementById('windDirectionCanvas');
-        windDirectionCanvas.height = windDirectionCanvas.width;
-        document.getElementById('windDirectionGauge').height = windDirectionCanvas.width; // TODO necessary?
-        var windDirectionGauge = new Gauge(windDirectionCanvas).setOptions(LivewindGauges.getDirectionGaugeOpts());
-        LivewindStore.storeGauge('windDirection', windDirectionGauge);
-        windDirectionGauge.maxValue = 360;
-        windDirectionGauge.setMinValue(0);
-        windDirectionGauge.animationSpeed = 16;
-    }
-
-    /**
-     * Creates and stores the gauge for the wind speed.
-     */
-    static createWindSpeedGauge() {
-        var windSpeedCanvas = document.getElementById('windSpeedCanvas');
-        windSpeedCanvas.height = windSpeedCanvas.width;
-        var windSpeedGauge = new Gauge(windSpeedCanvas).setOptions(LivewindGauges.getSpeedGaugeOpts(windSpeedCanvas.width / 15));
-        LivewindStore.storeGauge('windSpeed', windSpeedGauge);
-        windSpeedGauge.maxValue = 20;
-        windSpeedGauge.setMinValue(0);
-        windSpeedGauge.animationSpeed = 16;
-    }
-
-    /**
-     * Creates and stores the gauge for the wind speed gusts.
-     */
-    static createWindSpeedGustsGauge() {
-        var windSpeedGustsCanvas = document.getElementById('windSpeedGustsCanvas');
-        windSpeedGustsCanvas.height = windSpeedGustsCanvas.width;
-        var windSpeedGustsGauge = new Gauge(windSpeedGustsCanvas).setOptions(LivewindGauges.getSpeedGaugeOpts(windSpeedGustsCanvas.width / 15));
-        LivewindStore.storeGauge('windSpeedGusts', windSpeedGustsGauge);
-        windSpeedGustsGauge.maxValue = 20;
-        windSpeedGustsGauge.setMinValue(0);
-        windSpeedGustsGauge.animationSpeed = 16;
     }
 }

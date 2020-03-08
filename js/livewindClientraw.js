@@ -22,18 +22,17 @@ class Clientraw {
         var values = Clientraw.parseValues(url, request);
 
         var windSpeed = values[1];
-        LivewindStore.getGauge('windSpeed').set(windSpeed);
+        LivewindStore.getGauge('windSpeed').value = windSpeed;
         var windSpeedBeaufort = LivewindHelpers.getBeaufort(windSpeed);
         document.getElementById("windSpeedValue").innerHTML = windSpeed + ' kt (' + windSpeedBeaufort + ' Bft)';
 
         var windSpeedGusts = values[2];
-        LivewindStore.getGauge('windSpeedGusts').set(windSpeedGusts);
+        LivewindStore.getGauge('windSpeedGusts').value = windSpeedGusts;
         var windSpeedGustsBeaufort = LivewindHelpers.getBeaufort(windSpeedGusts);
         document.getElementById("windSpeedGustsValue").innerHTML = windSpeedGusts + ' kt (' + windSpeedGustsBeaufort + ' Bft)';
 
         var windDirection = values[3];
-        var windDirectionGaugeValue = (parseInt(windDirection) + 180) % 360;
-        LivewindStore.getGauge('windDirection').set(windDirectionGaugeValue);
+        LivewindStore.getGauge('windDirection').value = windDirection;
         document.getElementById("windDirectionValue").innerHTML = windDirection + ' °';
 
         var airTemperature = values[4]
